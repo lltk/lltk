@@ -5,7 +5,9 @@ import requests
 from lxml import html
 from itertools import groupby
 from .. import helpers
+from functools32 import lru_cache as caching
 
+@caching(maxsize =8)
 def miniaturize(word):
 	''' Try to scrape the miniaturized version from vandale.nl. '''
 	''' Returns a list of possible forms or [''] if theres no miniature form. [None] if there's no answer. '''

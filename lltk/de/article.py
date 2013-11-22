@@ -3,7 +3,9 @@
 
 import requests
 from lxml import html
+from functools32 import lru_cache as caching
 
+@caching(maxsize =8)
 def article(word):
 	''' Try to scrape the correct articles for singular and plural from pons.eu. '''
 

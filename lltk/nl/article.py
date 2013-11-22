@@ -4,7 +4,9 @@
 import requests
 from lxml import html
 from itertools import groupby
+from functools32 import lru_cache as caching
 
+@caching(maxsize =8)
 def article(word):
 	''' Try to scrape the correct articles for singular and plural from vandale.nl. '''
 	''' Returns a list of articles in format [singluar, plural]. If there's no singular/plural form the string will be empty. None-list if there's no answer. '''

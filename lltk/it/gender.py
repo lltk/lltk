@@ -4,7 +4,9 @@
 import requests
 from lxml import html
 from collections import Counter
+from functools32 import lru_cache as caching
 
+@caching(maxsize =8)
 def gender(word):
 	''' Try to scrape the correct gender for a given word from wordreference.com '''
 

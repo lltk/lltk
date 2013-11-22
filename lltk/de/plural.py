@@ -3,7 +3,9 @@
 
 import requests
 from lxml import html
+from functools32 import lru_cache as caching
 
+@caching(maxsize =8)
 def plural(word):
 	''' Try to scrape the plural version from pons.eu. '''
 	''' Returns a list of possible plural forms or [''] if theres no plural. [None] if there's no answer. '''
