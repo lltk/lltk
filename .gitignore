@@ -1,0 +1,9 @@
+*.pyc
+*.pyo
+build/
+dist/
+*.egg
+*.egg-info
+pip-log.txt
+*.so
+
