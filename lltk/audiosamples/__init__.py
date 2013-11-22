@@ -21,3 +21,4 @@ def _play_mp3(filename):
 	call(['/usr/bin/mpg123', '-q', filename])
 
 from google import google
+from forvo import forvo
