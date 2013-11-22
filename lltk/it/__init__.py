@@ -2,3 +2,4 @@
 # -*- coding: UTF-8 -*-
 
 from gender import gender
+from article import article
