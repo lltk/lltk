@@ -32,3 +32,10 @@ def ipa(language, word):
 def reference(language, word):
 	''' Example: reference('tree') -> ['the tree', 'the trees']. '''
 	return ['%s %s' % (article(language, word)[0] or '-', word), '%s %s' % (article(language, word)[1] or '-', plural(language, word)[0] or '-')]
+
+@load_language
+def translate(language, word):
+	''' Translates a word using Google Translate. '''
+
+	from textblob import TextBlob
+	return TextBlob(word).translate(from_lang = language[0], to = language[1]).string
