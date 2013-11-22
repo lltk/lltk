@@ -3,6 +3,8 @@
 
 from decorators import load_language, load_language_or_die
 
+LANGUAGES = ['de', 'en', 'nl', 'it', 'fr']
+
 @load_language_or_die
 def article(language, word):
 	''' Returns the correct articles (singular and plural) for a given word. '''
