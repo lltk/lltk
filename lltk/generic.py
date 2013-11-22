@@ -41,6 +41,15 @@ def translate(language, word):
 	return TextBlob(word).translate(from_lang = language[0], to = language[1]).string
 
 @load_language
+def audiosample(language, word, filename = '', play = False):
+	''' Tries to find a suitable audiosample for a given word '''
+
+	import lltk.audiosamples
+	if lltk.audiosamples.forvo(language, word, filename, play = play):
+		return True
+	return lltk.audiosamples.google(language, word, filename, play = play)
+
+@load_language
 def samplesentence(language, word):
 
 	mapto = {'it' : 'ita', 'en' : 'eng', 'de': 'deu', 'es' : 'spa', 'nl' : 'nld', 'fr' : 'fra'}
