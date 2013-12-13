@@ -17,18 +17,6 @@ def article(word):
 	elements = tree.xpath('//span[@class="f0f"]/span[@class="f0j"]')
 	if len(elements):
 		elements = elements[0].getchildren()
-
-		if not elements:
-			from sys import exit
-			from .. import helpers
-			vars = globals().copy()
-			vars.update(locals())
-			print 'Something went wrong. Opening debug console...'
-			helpers.interactiveconsole(vars)
-			print 'Quitting.'
-			exit(1)
-
-
 		element = [element.text for element in elements]
 
 		while element[0].isdigit():
