@@ -46,10 +46,10 @@ def translate(language, word):
 def audiosample(language, word, filename = '', play = False):
 	''' Tries to find a suitable audiosample for a given word '''
 
-	import lltk.audiosamples
-	if lltk.audiosamples.forvo(language, word, filename, play = play):
+	from lltk.audiosamples import forvo, google
+	if forvo(language, word, filename, play = play):
 		return True
-	return lltk.audiosamples.google(language, word, filename, play = play)
+	return google(language, word, filename, play = play)
 
 @load_language
 def samplesentence(language, word):
