@@ -9,11 +9,13 @@ class Scraper(object):
 	def __init__(self, word):
 		self.word = unicode(word)
 		self.name = 'Unknown'
+		self.licence = None
 		self.url = ''
 		self.baseurl = ''
 		self.language = ''
 		self.page = None
 		self.tree = None
+		self.elements = None
 
 	def __str__(self):
 		return 'Scraper %s (%s): %s' % (self.name, self.baseurl, self.word)
@@ -23,6 +25,14 @@ class Scraper(object):
 		def wrapper(self, *args, **kwargs):
 			if not self.is_downloaded():
 				self.download()
+			return f(self, *args, **kwargs)
+		return wrapper
+
+	@classmethod
+	def needs_elements(self, f):
+		def wrapper(self, *args, **kwargs):
+			if self.elements == None:
+				self.getelements()
 			return f(self, *args, **kwargs)
 		return wrapper
 
