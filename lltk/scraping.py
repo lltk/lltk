@@ -22,14 +22,16 @@ class Scraper(object):
 
 	@classmethod
 	def needs_download(self, f):
+		''' Decorator used to make sure that the downloading happens prior to running the task. '''
 		def wrapper(self, *args, **kwargs):
-			if not self.is_downloaded():
+			if not self.isdownloaded():
 				self.download()
 			return f(self, *args, **kwargs)
 		return wrapper
 
 	@classmethod
 	def needs_elements(self, f):
+		''' Decorator used to make sure that there are elements prior to running the task. '''
 		def wrapper(self, *args, **kwargs):
 			if self.elements == None:
 				self.getelements()
@@ -37,8 +39,19 @@ class Scraper(object):
 		return wrapper
 
 	def download(self):
+		''' Download HTML from baseurl. '''
 		self.page = requests.get(self.url)
 		self.tree = html.fromstring(self.page.text)
 
-	def is_downloaded(self):
+	def isdownloaded(self):
 		return bool(self.page)
+
+	def hasplural(self):
+		''' Try to find out whether a given noun has a plural form. '''
+
+		plural = self.plural()
+		if plural == ['']:
+			return False
+		if plural[0]:
+			return True
+		return None
