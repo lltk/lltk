@@ -3,6 +3,7 @@
 
 import requests
 from lxml import html
+import re
 
 from ...scraping import Scraper
 
@@ -15,88 +16,116 @@ class VandaleNl(Scraper):
 		self.baseurl = 'http://vandale.nl'
 		self.language = 'nl'
 
-	def download(self):
-		super(VandaleNl, self).download()
-		if self.tree.xpath('//div[@class="error"]'):
-			# We're going too fast. Too many queries in a short time
-			from ..exceptions import GoingTooFast
-			raise GoingTooFast('Too many queries in a short time. Hit the break.')
+	def _normalize(self, string):
+		string = string.replace(u'\xb7', '')
+		while string[0].isdigit():
+			string = string[1:]
+		return string
 
 	@Scraper.needs_download
+	def getelements(self):
+		self.elements = []
+		for element in self.tree.xpath('//div[@id="content-area"]/span[@class="f0f"]'):
+			content = self._normalize(element.text_content())
+			if not content.startswith(self.word + ' '):
+				# This is not the word we are looking for. Throw it away...
+				continue
+			self.elements.append(content)
+
+	@Scraper.needs_elements
 	def article(self):
 		''' Try to scrape the correct articles for singular and plural from vandale.nl. '''
 
-		result = [None, None]
-		elements = self.tree.xpath('//span[@class="f0f"]/span[@class="f0j"]')
-		if len(elements):
-			elements = elements[0].getchildren()
-			element = [element.text for element in elements]
+		articles = [None, None]
+		if len(self.elements):
+			for element in self.elements:
+				if re.search('([\w|\s]+) \(([\w|\s]+), (heeft [\w|\s]+)\)', element) or 'bijvoeglijk naamwoord' in element or 'bijwoord' in element:
+					# Skip verbs and adjectives
+					continue
+				if re.search('\((de|het);', element):
+					# Extract singular article
+					articles[0] = re.findall('\((de|het);', element)
+				else:
+					# No information about the article. It's propably not a noun
+					continue
+				if re.search('meervoud: (\w+)', element):
+					# It's a noun with a plural form
+					articles[1] = ['de']
+				else:
+					# It's probably a noun without a plural form
+					articles[1] = ['']
+				return articles
+		return articles
 
-			while element[0].isdigit():
-				element = element[1:]
-			singular = ''.join(element[0:element.index(' ')]).replace(u'\xb7', '')
-			if not singular == self.word:
-				return [None, None]
-
-			element = [singular] + element[element.index(' ') + 1:]
-			if element[2] in ['de', 'het', 'de/het', 'het/de']:
-				result[0] = element[2]
-			else:
-				# No article specified. Let's say it's 'de'
-				result[0] = 'de'
-
-			if not 'meervoud: ' in element:
-				# This means there is no plural
-				result[1] = ''
-			else:
-				result[1] = 'de'
-
-		return result
-
-	@Scraper.needs_download
+	@Scraper.needs_elements
 	def plural(self):
 		''' Try to scrape the plural version from vandale.nl. '''
 
-		elements = self.tree.xpath('//span[@class="f0f"]/span[@class="f0j"]')
-		if len(elements):
-			elements = elements[0].getchildren()
-			element = [element.text for element in elements]
-
-			while element[0].isdigit():
-				element = element[1:]
-			singular = ''.join(element[0:element.index(' ')]).replace(u'\xb7', '')
-			if not singular == self.word:
-				return [None]
-
-			if 'meervoud: ' in element:
-				first = element.index('meervoud: ') + 1
-				plurals = element[first:][:element[first:].index(')')]
-				if ', ' in plurals:
-					plurals.remove(', ')
-				return plurals
-			else:
-				# This means there is no plural
-				return ['']
-
+		if len(self.elements):
+			for element in self.elements:
+				if re.search('([\w|\s]+) \(([\w|\s]+), (heeft [\w|\s]+)\)', element) or 'bijvoeglijk naamwoord' in element or 'bijwoord' in element:
+					# Skip verbs and adjectives
+					continue
+				if re.search('meervoud: (\w+)', element):
+					return re.findall('meervoud: (\w+)', element)
+				else:
+					return ['']
 		return [None]
 
-	@Scraper.needs_download
+	@Scraper.needs_elements
+	def conjugate(self):
+		''' Try to conjugate a given verb using vandale.nl '''
+
+		conjugation = [None, None, None]
+		if len(self.elements):
+			for element in self.elements:
+				if re.search('([\w|\s]+) \(([\w|\s]+), (heeft [\w|\s]+)\)', element):
+					conjugation[0], conjugation[1], conjugation[2] = re.findall('([\w|\s]+) \(([\w|\s]+), (heeft [\w|\s]+)\)', element)[0]
+					conjugation = [x.split(' of ') for x in conjugation]
+					return conjugation
+		return conjugation
+
+	@Scraper.needs_elements
 	def miniaturize(self):
 		''' Try to scrape the miniaturized version from vandale.nl. '''
 
-		elements = self.tree.xpath('//span[@class="f0f"]/span[@class="f0j"]')[0].getchildren()
-		element = [element.text for element in elements]
-
-		while element[0].isdigit():
-			element = element[1:]
-		singular = ''.join(element[0:element.index(' ')]).replace(u'\xb7', '')
-		if singular is not self.word:
-			return [None]
-
-		if 'verkleinwoord: ' in element:
-			miniature = element[element.index('verkleinwoord: ') + 1]
-			return [miniature]
-		else:
-			# This means there is no miniature form
-			return ['']
+		if len(self.elements):
+			for element in self.elements:
+				if re.search('([\w|\s]+) \(([\w|\s]+), (heeft [\w|\s]+)\)', element) or 'bijvoeglijk naamwoord' in element:
+					# Skip verbs and adjectives
+					continue
+				if re.search('verkleinwoord: (\w+)', element):
+					return re.findall('verkleinwoord: (\w+)', element)
+				else:
+					return ['']
 		return [None]
+
+	@Scraper.needs_elements
+	def isnoun(self):
+		''' Try to decide whether a given word is a noun using vandale.nl. '''
+
+		if len(self.elements):
+			for element in self.elements:
+				if re.search('\((de|het);', element) or re.search('meervoud: (\w+)', element):
+					return True
+		return False
+
+	@Scraper.needs_elements
+	def isverb(self):
+		''' Try to decide whether a given word is a verb using vandale.nl. '''
+
+		if len(self.elements):
+			for element in self.elements:
+				if re.search('([\w|\s]+) \(([\w|\s]+), (heeft [\w|\s]+)\)', element):
+					return True
+		return False
+
+	@Scraper.needs_elements
+	def isadjective(self):
+		''' Try to decide whether a given word is an adjective using vandale.nl. '''
+
+		if len(self.elements):
+			for element in self.elements:
+				if 'bijvoeglijk naamwoord' in element and not 'bijwoord' in element:
+					return True
+		return False
