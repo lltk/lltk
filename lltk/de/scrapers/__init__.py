@@ -3,3 +3,5 @@
 
 from pons import PonsDe
 from wiktionary import WiktionaryDe
+
+del pons, wiktionary

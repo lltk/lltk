@@ -3,69 +3,109 @@
 
 import requests
 from lxml import html
+import re
 
-from ...scraping import Scraper
+from ...scraping import DictScraper, register
 
-class PonsDe(Scraper):
+class PonsDe(DictScraper):
 
 	def __init__(self, word):
-		super(PonsDe, self).__init__( word)
+
+		super(PonsDe, self).__init__(word)
 		self.name = 'Pons.eu'
 		self.url = 'http://de.pons.eu/dict/search/results/?q=%s&l=dede' % self.word
 		self.baseurl = 'http://de.pons.eu'
 		self.language = 'de'
 
+	def _normalize(self, string):
+		''' Returns a sanitized string. '''
+
+		string = string.replace(u'\xb7', '')
+		string = string.replace(u'\u0331', '')
+		string = string.replace(u'\u0323', '')
+		string = string.strip(' \n\rI.')
+		return string
+
 	def download(self):
+
 		super(PonsDe, self).download()
 		if self.tree.xpath('//div[@class="error"]'):
 			# We're going too fast. Too many queries in a short time
 			from ..exceptions import GoingTooFast
 			raise GoingTooFast('Too many queries in a short time. Hit the break.')
 
-	@Scraper.needs_download
-	def article(self):
+	@DictScraper._needs_download
+	def getelements(self):
+
+		self.elements = []
+		for element in self.tree.xpath('//div[contains(@class, "romhead")]/h2'):
+			content = self._normalize(element.text_content())
+			self.elements.append(content)
+
+	@DictScraper._needs_elements
+	def pos(self, element = None):
+		''' Try to decide about the part of speech. '''
+
+		tags = []
+		if element:
+			if element.startswith(('der', 'die', 'das')):
+				tags.append('NN')
+			if ' VERB' in element:
+				tags.append('VB')
+			if ' ADJ' in element:
+				tags.append('JJ')
+		else:
+			for element in self.elements:
+				if self.word in unicode(element):
+					return self.pos(element)
+		return tags
+
+	@DictScraper._needs_elements
+	def articles(self):
 		''' Try to scrape the correct articles for singular and plural from de.pons.eu. '''
 
-		elements = self.tree.xpath('//div[@rel="' + self.word + '"]//h2//span')
-		mapto, result = {}, [None, None]
-		if len(elements):
-			for i in xrange(len(elements)):
-				mapto[elements[i].attrib['class']] = i
-			if mapto.has_key('info'):
-				# There is no plural for this word
-				result[1] = ''
+		result = [None, None]
+		element = self._first('NN')
+		if element:
+			result[0] = [element.split(' ')[0]]
+			if 'kein Plur' in element:
+				# There is no plural
+				result[1] = ['']
 			else:
-				result[1] = 'die'
-			if mapto.has_key('genus') and elements[mapto['genus']].text.strip() in ['der', 'die', 'das']:
-				result[0] = elements[mapto['genus']].text.strip()
-			else:
-				result[0] = None
+				# If a plural form exists, there is only one possibility
+				result[1] = ['die']
 		return result
 
-	@Scraper.needs_download
+	@DictScraper._needs_elements
 	def plural(self):
 		''' Try to scrape the plural version from pons.eu. '''
 
-		elements = self.tree.xpath('//div[@rel="' + self.word + '"]//h2//span')
-		mapto = {}
-		if len(elements):
-			for i in xrange(len(elements)):
-				value = elements[i].attrib['class']
-				if not mapto.has_key(value):
-					mapto[value] = i
-			if mapto.has_key('info'):
-				# There is no plural for this word
+		element = self._first('NN')
+		if element:
+			if 'kein Plur' in element:
+				# There is no plural
 				return ['']
-			if mapto.has_key('flexion'):
-				suffix = elements[mapto['flexion']].text
-				if ',' in suffix:
-					suffix = suffix.split(',')[1][:-1].strip()
-				if suffix:
-					if suffix.startswith('-'):
-						return (self.word + suffix[1:]).split('/')
-					else:
-						return suffix.split('/')
-				else:
-					# Plural is the same as the singular
-					return [self.word]
+			if re.search(', ([\w|\s|/]+)>', element, re.U):
+				# Plural form is provided
+				return re.findall(', ([\w|\s|/]+)>', element, re.U)[0].split('/')
+			if re.search(', -(\w+)>', element, re.U):
+				# Suffix is provided
+				suffix = re.findall(', -(\w+)>', element, re.U)[0]
+				return [self.word + suffix]
+			if element.endswith('->'):
+				# Plural is the same as singular
+				return [self.word]
 		return [None]
+
+	@DictScraper._needs_elements
+	def conjugate(self):
+		''' Try to conjugate a given verb using pons.eu.'''
+
+		conjugation = [None, None, None]
+		element = self._first('VB')
+		if element:
+			conjugation[0] = self.word
+			conjugation[1], conjugation[2] = re.findall('<(?:[\w|\s|/]+), ([\w|\s|/]+), ([\w|\s|/]+)>', element, re.U)[0]
+		return conjugation
+
+register('de', PonsDe)
