@@ -1,41 +1,54 @@
 #!/usr/bin/python
 # -*- coding: UTF-8 -*-
 
-def load_language(f):
-	''' This decorator checks if there's a custom method for a given language. If so, prefer the custom method, otherwise do nothing. '''
+from functools import wraps
 
-	# @TODO: Modify docstrings
-	def loader(*args, **kwargs):
-		language, word, functionality = args[0], args[1], f.func_name
+def _load_language(f):
+	''' Decorator used to load a custom method for a given language. '''
+
+	# This decorator checks if there's a custom method for a given language.
+	# If so, prefer the custom method, otherwise do nothing.
+
+	@wraps(f)
+	def loader(language, word, *args, **kwargs):
+		method = f.func_name
 		try:
-			_lltk = __import__('lltk.' + language, globals(), locals(), [functionality], -1)
+			if isinstance(language, (list, tuple)):
+				_lltk = __import__('lltk.' + language[0], globals(), locals(), [method], -1)
+			else:
+				_lltk = __import__('lltk.' + language, globals(), locals(), [method], -1)
 		except ImportError:
 			from exceptions import LanguageNotSupported
 			raise LanguageNotSupported('The language ' + language.upper() + ' is not supported so far.')
 		try:
-			function = eval('_lltk.' + functionality)
+			function = eval('_lltk.' + method)
 			return function(word)
-		except (TypeError, AttributeError):
+		except (TypeError, AttributeError) as e:
 			# No custom method implemented, yet. Continue as normal...
-			return f(*args, **kwargs)
+			return f(language, word, *args, **kwargs)
 	return loader
 
-def load_language_or_die(f):
-	''' This decorator loads a custom method for a given language. '''
+def _load_language_or_die(f):
+	''' Decorator used to load a custom method for a given language. '''
 
-	def loader(*args, **kwargs):
-		language, word, functionality = args[0], args[1], f.func_name
+	# This decorator checks if there's a custom method for a given language.
+	# If so, prefer the custom method, otherwise raise exception NotImplementedError.
+
+	@wraps(f)
+	def loader(language, word, *args, **kwargs):
+		method = f.func_name
 		try:
-			_lltk = __import__('lltk.' + language, globals(), locals(), [functionality], -1)
+			if isinstance(language, (list, tuple)):
+				_lltk = __import__('lltk.' + language[0], globals(), locals(), [method], -1)
+			else:
+				_lltk = __import__('lltk.' + language, globals(), locals(), [method], -1)
 		except ImportError:
 			from exceptions import LanguageNotSupported
 			raise LanguageNotSupported('The language ' + language.upper() + ' is not supported so far.')
 		try:
-			function = eval('_lltk.' + functionality)
+			function = eval('_lltk.' + method)
 			return function(word)
-		except (TypeError, AttributeError):
+		except (TypeError, AttributeError) as e:
 			# No custom method implemented, yet.
-			raise NotImplementedError('Method lltk.' + language + '.' + functionality +'() not implemented, yet.')
-			# Do this if you want to continue as normal:
-			# return f(*args, **kwargs)
+			raise NotImplementedError('Method lltk.' + language + '.' + method +'() not implemented, yet.')
 	return loader
