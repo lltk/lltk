@@ -5,9 +5,9 @@ import requests
 from lxml import html
 from collections import Counter
 
-from ...scraping import Scraper
+from ...scraping import DictScraper, register
 
-class WordreferenceIt(Scraper):
+class WordreferenceIt(DictScraper):
 
 	def __init__(self, word):
 		super(WordreferenceIt, self).__init__( word)
@@ -16,12 +16,7 @@ class WordreferenceIt(Scraper):
 		self.baseurl = 'http://wordreference.com'
 		self.language = 'it'
 
-	def download(self):
-		super(WordreferenceIt, self).download()
-#		if len(self.tree.xpath('//span[@class="noThreads"]')) or len(self.tree.xpath('//p[@id="noEntryFound"]')):
-#			# There are no result. This is most likely not a proper word
-
-	@Scraper.needs_download
+	@DictScraper._needs_download
 	def gender(self):
 		''' Try to scrape the correct gender for a given word from wordreference.com '''
 
