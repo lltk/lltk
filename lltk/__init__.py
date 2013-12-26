@@ -4,4 +4,11 @@
 __author__ = 'Markus Beuckelmann'
 __version__ = '0.1'
 
-from generic import *
+__all__ = ['de', 'en', 'nl', 'it', 'audiosamples', 'samplesentences']
+
+import de, en, nl, it
+import generic
+import audiosamples
+import sentences
+
+del decorators
