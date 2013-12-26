@@ -1,11 +1,112 @@
 #!/usr/bin/python
 # -*- coding: UTF-8 -*-
 
-__all__ = ['register', 'discover', 'GenericScraper', 'TextScraper', 'DictScraper']
+__all__ = ['register', 'discover', 'Scrape', 'GenericScraper', 'TextScraper', 'DictScraper']
 
 import requests
 from lxml import html
 from functools import wraps
+
+scrapers = {}
+discovered = {}
+
+def register(language, scraper):
+	''' Register a scraper to make it available for the generic scraping interface '''
+
+	global scrapers
+	if scrapers.has_key(language):
+		scrapers[language].append(scraper)
+	else:
+		scrapers[language] = [scraper]
+
+def discover(language):
+	''' Discover all registered scrapers to be used for the generic scraping interface. '''
+
+	global scrapers, discovered
+	for language in scrapers.iterkeys():
+		discovered[language] = {}
+		for scraper in scrapers[language]:
+			blacklist = ['download', 'isdownloaded', 'getelements']
+			methods = [method for method in dir(scraper) if method not in blacklist and not method.startswith('_') and callable(getattr(scraper, method))]
+			for method in methods:
+				if discovered[language].has_key(method):
+					discovered[language][method].append(scraper)
+				else:
+					discovered[language][method] = [scraper]
+
+class Scrape(object):
+	''' Provides a generic scraping interface to all available scrapers for a language. '''
+
+	def __init__(self, language, word):
+
+		global scrapers, discovered
+		if scrapers and not discovered:
+			discover(language)
+
+		self.language = language
+		self.word = word
+		self.scrapers = scrapers
+		if discovered.has_key(language):
+			self.methods = discovered[self.language].keys()
+		else:
+			self.methods = []
+		self.mode = 'default'
+		self.source = None
+
+		for method in self.methods:
+			# Just make sure to make the special methods available for now.
+			# A hook in __getattribute__ will take care of the rest.
+			self.__dict__[method] = lambda: ''
+
+	def __getattribute__(self, name):
+
+		try:
+			methods = object.__getattribute__(self, 'methods')
+		except AttributeError:
+			pass
+		else:
+			if name in methods:
+				f = lambda: self._scrape(name)
+				f.func_name = name
+				f.func_doc = eval('self._scheduler(\'' + name + '\').next().' + name + '.func_doc')
+				return f
+		return super(Scrape, self).__getattribute__(name)
+
+	def _isempty(self, response):
+		''' Finds out if a scraping result should be considered empty. '''
+
+		if isinstance(response, list):
+			for element in response:
+				if isinstance(element, list):
+					if not self._isempty(element):
+						return False
+				else:
+					if element is not None:
+						return False
+		else:
+			if response is not None:
+				return False
+		return True
+
+	def _scheduler(self, method, mode = None):
+		''' Iterates over all available scrapers. '''
+		# @TODO: Introducte different modes such as random, ...
+
+		global discovered
+		if discovered.has_key(self.language) and discovered[self.language].has_key(method):
+			for Scraper in discovered[self.language][method]:
+				yield Scraper
+
+	def _scrape(self, method):
+
+		for Scraper in self._scheduler(method):
+			scraper = Scraper(self.word)
+			result = eval('scraper.' + method + '()')
+			if not self._isempty(result):
+				self.source = unicode(scraper)
+				return result
+			print unicode(scraper) + ' didn\'t know. Keep looking...'
+
 
 class GenericScraper(object):
 	''' This is the generic base class that all custom scrapers should be derived from. '''
