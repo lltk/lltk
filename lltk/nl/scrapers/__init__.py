@@ -3,3 +3,6 @@
 
 from vandale import VandaleNl
 from uitmuntend import UitmuntendNl
+from mijnwoordenboek import MijnWoordenBoekNl
+
+del vandale, uitmuntend, mijnwoordenboek
