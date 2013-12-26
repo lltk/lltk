@@ -6,6 +6,7 @@ __all__ = ['register', 'discover', 'Scrape', 'GenericScraper', 'TextScraper', 'D
 import requests
 from lxml import html
 from functools import wraps
+from helpers import debug
 
 scrapers = {}
 discovered = {}
@@ -103,9 +104,10 @@ class Scrape(object):
 			scraper = Scraper(self.word)
 			result = eval('scraper.' + method + '()')
 			if not self._isempty(result):
-				self.source = unicode(scraper)
+				self.source = scraper
+				debug(scraper.name + ' is answering...')
 				return result
-			print unicode(scraper) + ' didn\'t know. Keep looking...'
+			debug(scraper.name + ' didn\'t know. Keep looking...')
 
 
 class GenericScraper(object):

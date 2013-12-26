@@ -1,6 +1,14 @@
 #!/usr/bin/python
 # -*- coding: UTF-8 -*-
 
+def debug(message):
+	''' Prints message if debug mode is enabled. '''
+
+	from lltk import DEBUG
+	if DEBUG:
+		from termcolor import colored
+		print colored('@LLTK-DEBUG: ' + message, 'yellow')
+
 def debugconsole():
 	''' Opens an interactive IPython console. Used for debugging purposes. '''
 

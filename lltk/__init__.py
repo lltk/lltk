@@ -12,3 +12,5 @@ import audiosamples
 import sentences
 
 del decorators
+
+DEBUG = False
