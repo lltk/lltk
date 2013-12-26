@@ -20,12 +20,13 @@ def _load_language(f):
 		except ImportError:
 			from exceptions import LanguageNotSupported
 			raise LanguageNotSupported('The language ' + language.upper() + ' is not supported so far.')
-		try:
+
+		if hasattr(_lltk, method):
 			function = eval('_lltk.' + method)
-			return function(word)
-		except (TypeError, AttributeError) as e:
-			# No custom method implemented, yet. Continue as normal...
-			return f(language, word, *args, **kwargs)
+			if callable(function):
+				return function(word)
+		# No custom method implemented, yet. Continue as normal...
+		return f(language, word, *args, **kwargs)
 	return loader
 
 def _load_language_or_die(f):
@@ -45,10 +46,13 @@ def _load_language_or_die(f):
 		except ImportError:
 			from exceptions import LanguageNotSupported
 			raise LanguageNotSupported('The language ' + language.upper() + ' is not supported so far.')
-		try:
+
+		if hasattr(_lltk, method):
 			function = eval('_lltk.' + method)
-			return function(word)
-		except (TypeError, AttributeError) as e:
-			# No custom method implemented, yet.
-			raise NotImplementedError('Method lltk.' + language + '.' + method +'() not implemented, yet.')
+			if callable(function):
+				return function(word)
+		# No custom method implemented, yet.
+		from IPython import embed
+		embed()
+		raise NotImplementedError('Method lltk.' + language + '.' + method +'() not implemented, yet.')
 	return loader
