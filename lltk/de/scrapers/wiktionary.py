@@ -22,6 +22,7 @@ class WiktionaryDe(TextScraper):
 
 		string = string.replace(u'\xb7', '')
 		string = string.replace(u'\xa0', ' ')
+		string = string.replace('selten: ', '')
 		string = string.strip()
 		return string
 
@@ -32,12 +33,12 @@ class WiktionaryDe(TextScraper):
 		tags = []
 		if self.tree.xpath('//div[@id="mw-content-text"]//a[@title="Hilfe:Wortart"]/text()'):
 			info = self.tree.xpath('//div[@id="mw-content-text"]//a[@title="Hilfe:Wortart"]/text()')[0]
-		if info == 'Substantiv':
-			tags.append('NN')
-		if info == 'Verb':
-			tags.append('VB')
-		if info == 'Adjektiv':
-			tags.append('JJ')
+			if info == 'Substantiv':
+				tags.append('NN')
+			if info == 'Verb':
+				tags.append('VB')
+			if info == 'Adjektiv':
+				tags.append('JJ')
 		return tags
 
 	@TextScraper._needs_download

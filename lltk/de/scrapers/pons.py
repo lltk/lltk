@@ -67,7 +67,7 @@ class PonsDe(DictScraper):
 		result = [None, None]
 		element = self._first('NN')
 		if element:
-			result[0] = [element.split(' ')[0]]
+			result[0] = [element.split(' ')[0].replace('(die)', '').strip()]
 			if 'kein Plur' in element:
 				# There is no plural
 				result[1] = ['']
