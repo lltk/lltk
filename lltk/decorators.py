@@ -52,7 +52,5 @@ def _load_language_or_die(f):
 			if callable(function):
 				return function(word)
 		# No custom method implemented, yet.
-		from IPython import embed
-		embed()
 		raise NotImplementedError('Method lltk.' + language + '.' + method +'() not implemented, yet.')
 	return loader
