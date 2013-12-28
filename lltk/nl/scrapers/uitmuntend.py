@@ -40,13 +40,15 @@ class UitmuntendNl(DictScraper):
 	def pos(self, element = None):
 		''' Try to decide about the part of speech. '''
 
+		tags = []
 		if element:
-			if element.startswith(('de ', 'het ')) and not re.search('\[[\w|\s][\w|\s]+\]', element.split('\r\n')[0]):
-				return 'NN'
-			if re.search('[\w|\s|/]+ \| [\w|\s|/]+ - [\w|\s|/]+', element):
-				return 'VB'
-			if re.search('[\w|\s]+ \| [\w|\s]+', element):
-				return 'JJ'
+			if element.startswith(('de ', 'het ', 'het/de', 'de/het')) and not re.search('\[[\w|\s][\w|\s]+\]', element.split('\r\n')[0], re.U):
+				tags.append('NN')
+			if re.search('[\w|\s|/]+ \| [\w|\s|/]+ - [\w|\s|/]+', element, re.U):
+				tags.append('VB')
+			if re.search('[\w|\s]+ \| [\w|\s]+', element, re.U):
+				tags.append('JJ')
+			return tags
 		else:
 			for element in self.elements:
 				if self.word in unicode(element):
@@ -69,11 +71,11 @@ class UitmuntendNl(DictScraper):
 			else:
 				# This means there is no plural
 				singular, plural = element.strip(), ''
-				result[1] = plural
+				result[1] = ''
 			if singular:
-				result[0] = singular.split(' ')[0]
+				result[0] = singular.split(' ')[0].split('/')
 			if plural:
-				result[1] = plural.split(' ')[0]
+				result[1] = plural.split(' ')[0].split('/')
 		return result
 
 	@DictScraper._needs_elements
@@ -99,8 +101,8 @@ class UitmuntendNl(DictScraper):
 		element = self._first('NN')
 		if element:
 			element = element.split('\r\n')[0]
-			if re.search(r' \[([m|f])\]', element):
-				genus = re.findall(r' \[([m|f])\]', element)[0]
+			if re.search(r' \[([m|f])\]', element, re.U):
+				genus = re.findall(r' \[([m|f])\]', element, re.U)[0]
 				return genus
 			return 'n'
 

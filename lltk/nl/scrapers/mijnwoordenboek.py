@@ -38,10 +38,9 @@ class MijnWoordenBoekNl(TextScraper):
 
 		if self.tree.xpath('//div[@class="grad733100"]/table'):
 			info = self.tree.xpath('//div[@class="grad733100"]/table')[0].text_content().encode('latin-1')
-			if re.search('Uitspraak:.+\[(.+)\]', info):
-				result = re.findall('Uitspraak:.+\[(.+)\]', info)[0]
-				result.strip('/')
-				result = '/' + result + '/'
+			if re.search('Uitspraak:.+\[(.+)\]', info, re.U):
+				result = re.findall('Uitspraak:.+\[(.+)\]', info, re.U)[0]
+				result = result.decode('utf-8').strip('/')
 				return [result]
 		return [None]
 
@@ -74,13 +73,13 @@ class MijnWoordenBoekNl(TextScraper):
 			article, word = content.split(' ')[0], ''.join(content.split(' ')[1:])
 			if self.tree.xpath('//div[@class="grad733100"]/table'):
 				info = self.tree.xpath('//div[@class="grad733100"]/table')[0].text_content().encode('latin-1')
-			if re.search('-(\w+) \(meerv.\)', info):
+			if re.search('-(\w+) \(meerv.\)', info, re.U):
 				# Suffix is provided
-				suffix = re.findall('-(\w+) \(meerv.\)', info)[0].strip()
+				suffix = re.findall('-(\w+) \(meerv.\)', info, re.U)[0].strip()
 				return [word + suffix]
-			elif re.search('([\w|\s]+) \(meerv.\)', info):
+			elif re.search('([\w|\s]+) \(meerv.\)', info, re.U):
 				# Plural form is provided
-				result = re.findall('([\w|\s]+) \(meerv.\)', info)[0].strip()
+				result = re.findall('([\w|\s]+) \(meerv.\)', info, re.U)[0].strip()
 				return [result]
 			else:
 				# There is no plural
@@ -94,9 +93,9 @@ class MijnWoordenBoekNl(TextScraper):
 		if 'VB' in self.pos():
 			if self.tree.xpath('//div[@class="grad733100"]/table'):
 				info = self.tree.xpath('//div[@class="grad733100"]/table')[0].text_content().encode('latin-1')
-				if re.search('([\w|\s]+) \(verl\.tijd \) ([\w|\s]+) \(volt\.deelw\.\)', info):
+				if re.search('([\w|\s]+) \(verl\.tijd \) ([\w|\s]+) \(volt\.deelw\.\)', info, re.U):
 					conjugation[0] = self.word
-					conjugation[1], conjugation[2] = re.findall('([\w|\s]+) \(verl\.tijd \) ([\w|\s]+) \(volt\.deelw\.\)', info)[0]
+					conjugation[1], conjugation[2] = re.findall('([\w|\s]+) \(verl\.tijd \) ([\w|\s]+) \(volt\.deelw\.\)', info, re.U)[0]
 					conjugation[2] = conjugation[2].replace(' of ', '/')
 					conjugation = [x.strip() for x in conjugation]
 		return conjugation

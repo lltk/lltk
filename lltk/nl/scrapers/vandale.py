@@ -36,13 +36,15 @@ class VandaleNl(DictScraper):
 	def pos(self, element = None):
 		''' Try to decide about the part of speech. '''
 
+		tags = []
 		if element:
-			if re.search('\((de|het);', element):
-				return 'NN'
-			if re.search('[\w|\s]+ \([\w|\s]+, [\w|\s|,]+\)', element):
-				return 'VB'
+			if re.search('(de|het/?de|het);', element, re.U):
+				tags.append('NN')
+			if re.search('[\w|\s]+ \([\w|\s]+, [\w|\s|,]+\)', element, re.U):
+				tags.append('VB')
 			if 'bijvoeglijk naamwoord' in element or 'bijwoord' in element:
-				return 'JJ'
+				tags.append('JJ')
+			return tags
 		else:
 			for element in self.elements:
 				if self.word in unicode(element):
@@ -57,8 +59,9 @@ class VandaleNl(DictScraper):
 		result = [None, None]
 		element = self._first('NN')
 		if element:
-			result[0] = re.findall('\((de|het);', element)
-			if re.search('meervoud: (\w+)', element):
+			if re.search('(de|het/?de|het);', element, re.U):
+				result[0] = re.findall('(de|het/?de|het);', element, re.U)[0].split('/')
+			if re.search('meervoud: (\w+)', element, re.U):
 				# It's a noun with a plural form
 				result[1] = ['de']
 			else:
@@ -72,8 +75,10 @@ class VandaleNl(DictScraper):
 
 		element = self._first('NN')
 		if element:
-			if re.search('meervoud: (\w+)', element):
-				return re.findall('meervoud: (\w+)', element)
+			if re.search('meervoud: ([\w|\s|\'|\-|,]+)', element, re.U):
+				results = re.search('meervoud: ([\w|\s|\'|\-|,]+)', element, re.U).groups()[0].split(', ')
+				results = [x.replace('ook ', '').strip() for x in results]
+				return results
 			else:
 				# There is no plural form
 				return ['']
@@ -87,7 +92,7 @@ class VandaleNl(DictScraper):
 		element = self._first('VB')
 		if element:
 			conjugation[0] = self.word
-			conjugation[1], conjugation[2] = re.findall('\(([\w|\s]+), ([\w|\s|,]+)\)', element)[0]
+			conjugation[1], conjugation[2] = re.findall('\(([\w|\s]+), ([\w|\s|,]+)\)', element, re.U)[0]
 			conjugation[2] = conjugation[2].replace('heeft, is', 'heeft/is')
 			conjugation = [x.split(' of ') for x in conjugation]
 		return conjugation
@@ -98,8 +103,8 @@ class VandaleNl(DictScraper):
 
 		element = self._first('NN')
 		if element:
-			if re.search('verkleinwoord: (\w+)', element):
-				return re.findall('verkleinwoord: (\w+)', element)
+			if re.search('verkleinwoord: (\w+)', element, re.U):
+				return re.findall('verkleinwoord: (\w+)', element, re.U)
 			else:
 				return ['']
 		return [None]
