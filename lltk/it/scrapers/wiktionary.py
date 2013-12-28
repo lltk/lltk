@@ -46,7 +46,6 @@ class WiktionaryIt(TextScraper):
 		if result:
 			result = result[0]
 			result = result.strip('/')
-			result = '/' + result + '/'
 			return [result]
 		return [None]
 

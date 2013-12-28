@@ -46,8 +46,7 @@ class WiktionaryDe(TextScraper):
 
 		if self.tree.xpath('//span[@class="ipa"]/text()'):
 			result = self.tree.xpath('//span[@class="ipa"]/text()')[0]
-			result.strip('/')
-			result = '/' + result + '/'
+			result = result.strip('/')
 			return [result]
 		return [None]
 
