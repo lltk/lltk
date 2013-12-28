@@ -5,8 +5,9 @@ def forvo(language, word, filename = '', overwrite = False, play = False):
 	''' Downloads a suitable audiosample for a given word from Forvo.com. '''
 
 	# @TODO: Normalize volume: mp3gain
+	# @TODO: Make forvo() return list of urls, download should not happen here
 
-	from requests import get
+	import requests
 
 	API_KEY = '4ce2cd9ecb817fa7b27de96b8bb67b10'
 	url = 'http://apifree.forvo.com/action/word-pronunciations/format/json/word/%s/language/%s/key/%s/' % (word, language, API_KEY)
@@ -14,13 +15,16 @@ def forvo(language, word, filename = '', overwrite = False, play = False):
 	if not len(filename):
 		filename = language.upper() + '-' + word + '.mp3'
 
-	request = get(url)
-	if request.status_code == 200:
-		if 'incorrect' in request.text:
+	page = requests.get(url)
+	if page.status_code == 200:
+		if 'incorrect' in page.text:
 			from ..exceptions import IncorrectForvoAPIKey
 			raise IncorrectForvoAPIKey('Your Forvi API key seems to be wrong. Please check on http://api.forvo.com.')
-		data = request.json()
-		if len(data['items']):
+		data = page.json()
+		if data == ['Limit/day reached.']:
+			from ..exceptions import DailyForvoLimitExceeded
+			raise DailyForvoLimitExceeded('You have exceeded your daily Forvo API limit.')
+		if data.has_key('items') and len(data['items']):
 			# Forvo API can even do the sorting for you. But it's fine for now
 			items = sorted(data['items'], key = lambda x: int(x['num_votes']), reverse = True)
 			for item in items:

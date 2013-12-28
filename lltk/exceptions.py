@@ -12,3 +12,7 @@ class GoingTooFast(Exception):
 class IncorrectForvoAPIKey(Exception):
 	''' Used when you provide a wrong API key for forve audiosamples. '''
 	pass
+
+class DailyForvoLimitExceeded(Exception):
+	''' Used when the daily Forvo API limit is exceeded. '''
+	pass
