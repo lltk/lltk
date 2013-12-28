@@ -67,10 +67,10 @@ def audiosample(language, word, filename = '', play = False):
 	return google(language, word, filename, play = play)
 
 @_load_language
-def samplesentence(language, word):
+def textsample(language, word):
 	''' Returns a sample sentence showing a given word in context.'''
 
-	from lltk.sentences import tatoeba
+	from lltk.textsamples import tatoeba
 	return tatoeba(language, word)
 
 @_load_language
