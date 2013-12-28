@@ -9,6 +9,7 @@ __all__ = ['de', 'en', 'nl', 'it', 'audiosamples', 'samplesentences']
 import de, en, nl, it
 import generic
 import audiosamples
+import images
 import sentences
 
 del decorators
