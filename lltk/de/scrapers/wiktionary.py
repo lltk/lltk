@@ -67,9 +67,9 @@ class WiktionaryDe(TextScraper):
 				content = self.tree.xpath('//table[contains(@class, "wikitable")]/tr')[1].text_content()
 				singular, plural = content.split('\n')[1:3]
 				if singular.startswith(('der ', 'die ', 'das ')):
-					result[0] = singular.split(' ')[0]
+					result[0] = singular.split(' ')[0].split('/')
 				if plural.startswith(('der ', 'die ', 'das ')):
-					result[1] = plural.split(' ')[0]
+					result[1] = plural.split(' ')[0].split('/')
 		return result
 
 	@TextScraper._needs_download
