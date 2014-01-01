@@ -16,6 +16,11 @@ def download(url, filename, overwrite = False):
 		return True
 	return False
 
+def play(filename):
+
+	from subprocess import call
+	call(['/usr/bin/mpg123', '-q', filename])
+
 def debug(message):
 	''' Prints message if debug mode is enabled. '''
 

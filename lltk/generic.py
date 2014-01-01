@@ -58,13 +58,15 @@ def translate(language, word):
 	return TextBlob(word).translate(from_lang = language[0], to = language[1]).string
 
 @_load_language
-def audiosample(language, word, filename = '', play = False):
-	''' Returns a suitable audiosample for a given word '''
+def audiosample(language, word, key = ''):
+	''' Returns a list of URLs to suitable audiosamples for a given word. '''
 
 	from lltk.audiosamples import forvo, google
-	if forvo(language, word, filename, play = play):
-		return True
-	return google(language, word, filename, play = play)
+
+	urls = []
+	urls += forvo(language, word, key)
+	urls += google(language, word)
+	return urls
 
 @_load_language
 def textsample(language, word):
