@@ -58,7 +58,7 @@ def translate(language, word):
 	return TextBlob(word).translate(from_lang = language[0], to = language[1]).string
 
 @_load_language
-def audiosample(language, word, key = ''):
+def audiosamples(language, word, key = ''):
 	''' Returns a list of URLs to suitable audiosamples for a given word. '''
 
 	from lltk.audiosamples import forvo, google
@@ -69,7 +69,7 @@ def audiosample(language, word, key = ''):
 	return urls
 
 @_load_language
-def textsample(language, word):
+def textsamples(language, word):
 	''' Returns a sample sentence showing a given word in context.'''
 
 	from lltk.textsamples import tatoeba
