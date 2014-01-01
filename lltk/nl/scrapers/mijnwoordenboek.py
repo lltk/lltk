@@ -17,6 +17,11 @@ class MijnWoordenBoekNl(TextScraper):
 		self.baseurl = 'http://www.mijnwoordenboek.nl'
 		self.language = 'nl'
 
+	def _normalize(self, string):
+
+		string = string.replace(u'\xa0', '')
+		return string
+
 	@TextScraper._needs_download
 	def pos(self):
 		''' Try to decide about the part of speech. '''
@@ -92,12 +97,14 @@ class MijnWoordenBoekNl(TextScraper):
 		conjugation = [None, None, None]
 		if 'VB' in self.pos():
 			if self.tree.xpath('//div[@class="grad733100"]/table'):
-				info = self.tree.xpath('//div[@class="grad733100"]/table')[0].text_content().encode('latin-1')
+				info = self._normalize(self.tree.xpath('//div[@class="grad733100"]/table')[0].text_content()).encode('latin-1')
+				print info
 				if re.search('([\w|\s]+) \(verl\.tijd \) ([\w|\s]+) \(volt\.deelw\.\)', info, re.U):
 					conjugation[0] = self.word
 					conjugation[1], conjugation[2] = re.findall('([\w|\s]+) \(verl\.tijd \) ([\w|\s]+) \(volt\.deelw\.\)', info, re.U)[0]
 					conjugation[2] = conjugation[2].replace(' of ', '/')
 					conjugation = [x.strip() for x in conjugation]
+					conjugation = [x.split('/') for x in conjugation]
 		return conjugation
 
 register('nl', MijnWoordenBoekNl)
