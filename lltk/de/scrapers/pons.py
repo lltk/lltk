@@ -106,6 +106,7 @@ class PonsDe(DictScraper):
 		if element:
 			conjugation[0] = self.word
 			conjugation[1], conjugation[2] = re.findall('<(?:[\w|\s|/]+), ([\w|\s|/]+), ([\w|\s|/]+)>', element, re.U)[0]
+			conjugation = [x.split('/') for x in conjugation]
 		return conjugation
 
 register('de', PonsDe)
