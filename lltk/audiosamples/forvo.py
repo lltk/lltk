@@ -30,8 +30,8 @@ def forvo(language, word, filename = '', overwrite = False, play = False):
 			for item in items:
 				if item.has_key('pathmp3'):
 					mp3url, votes = item['pathmp3'].replace('\\', ''), item['num_votes']
-					from . import _download_mp3
-					if not _download_mp3(mp3url, filename, overwrite):
+					from . import download
+					if not download(mp3url, filename, overwrite):
 						continue
 					else:
 						if play:
