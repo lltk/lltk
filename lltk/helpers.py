@@ -29,6 +29,12 @@ def debug(message):
 		from termcolor import colored
 		print colored('@LLTK-DEBUG: ' + message, 'yellow')
 
+def open_in_browser(tree, encoding = 'utf-8'):
+	''' Opens a LXML tree in a browser. '''
+
+	from lxml.html import open_in_browser
+	open_in_browser(tree, encoding)
+
 def debugconsole():
 	''' Opens an interactive IPython console. Used for debugging purposes. '''
 
