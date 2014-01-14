@@ -106,21 +106,4 @@ class UitmuntendNl(DictScraper):
 				return genus
 			return 'n'
 
-	@DictScraper._needs_elements
-	def conjugate(self):
-		''' Try to conjugate a given verb using uitmuntend.nl '''
-
-		conjugation = [None, None, None]
-		element = self._first('VB')
-		if element:
-			element = element.split('\r\n')[0]
-			element = element.split(' | ')
-			if len(element) > 1:
-				conjugation[0] = element[0].strip().split(' / ')
-				element = element[1].split(' - ')
-				if len(element) > 1:
-					conjugation[1] = element[0].split(' / ')
-					conjugation[2] = element[1].replace('|', '').strip().split(' / ')
-		return conjugation
-
 register('nl', UitmuntendNl)

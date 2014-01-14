@@ -97,16 +97,4 @@ class PonsDe(DictScraper):
 				return [self.word]
 		return [None]
 
-	@DictScraper._needs_elements
-	def conjugate(self):
-		''' Try to conjugate a given verb using pons.eu.'''
-
-		conjugation = [None, None, None]
-		element = self._first('VB')
-		if element:
-			conjugation[0] = self.word
-			conjugation[1], conjugation[2] = re.findall('<(?:[\w|\s|/]+), ([\w|\s|/]+), ([\w|\s|/]+)>', element, re.U)[0]
-			conjugation = [x.split('/') for x in conjugation]
-		return conjugation
-
 register('de', PonsDe)

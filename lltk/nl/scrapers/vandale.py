@@ -85,19 +85,6 @@ class VandaleNl(DictScraper):
 		return [None]
 
 	@DictScraper._needs_elements
-	def conjugate(self):
-		''' Try to conjugate a given verb using vandale.nl '''
-
-		conjugation = [None, None, None]
-		element = self._first('VB')
-		if element:
-			conjugation[0] = self.word
-			conjugation[1], conjugation[2] = re.findall('\(([\w|\s]+), ([\w|\s|,]+)\)', element, re.U)[0]
-			conjugation[2] = conjugation[2].replace('heeft, is', 'heeft/is')
-			conjugation = [x.split(' of ') for x in conjugation]
-		return conjugation
-
-	@DictScraper._needs_elements
 	def miniaturize(self):
 		''' Try to scrape the miniaturized version from vandale.nl. '''
 

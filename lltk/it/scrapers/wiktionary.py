@@ -83,15 +83,4 @@ class WiktionaryIt(TextScraper):
 #				return result
 #		return [None]
 
-#	@TextScraper._needs_download
-#	def conjugate(self):
-
-#		conjugation = [None, None, None]
-#		if self.pos() == 'VB':
-#			if self.tree.xpath(u'//div[@id="mw-content-text"]/p[@title="Trennungsmöglichkeiten am Zeilenumbruch"]'):
-#				content = self._normalize(self.tree.xpath(u'//div[@id="mw-content-text"]/p[@title="Trennungsmöglichkeiten am Zeilenumbruch"]')[0].getnext().text_content())
-#				conjugation[0] = self.word
-#				conjugation[1], conjugation[2] = re.findall(': ([\w|\s]+), [\w|\s]+: ([\w|\s]+)', content, re.U)[0]
-#		return conjugation
-
 register('it', WiktionaryIt)
