@@ -3,5 +3,6 @@
 
 from pons import PonsDe
 from wiktionary import WiktionaryDe
+from verbix import VerbixDe
 
-del pons, wiktionary
+del pons, wiktionary, verbix
