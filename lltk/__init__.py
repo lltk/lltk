@@ -4,9 +4,9 @@
 __author__ = 'Markus Beuckelmann'
 __version__ = '0.1'
 
-__all__ = ['de', 'en', 'nl', 'it', 'es', 'audiosamples', 'textsamples', 'images']
+__all__ = ['de', 'en', 'nl', 'it', 'es', 'fr', 'audiosamples', 'textsamples', 'images']
 
-import de, en, nl, it, es
+import de, en, nl, it, es, fr
 import generic
 import audiosamples
 import textsamples
