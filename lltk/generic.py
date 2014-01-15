@@ -40,6 +40,16 @@ def miniaturize(language, word):
 	''' Returns the miniaturized version for a given noun. '''
 	pass
 
+@_load_language_or_die
+def comparative(language, word):
+	''' Returns the comparative for a given adjective. '''
+	pass
+
+@_load_language_or_die
+def superlative(language, word):
+	''' Returns the superlative for a given adjective. '''
+	pass
+
 @_load_language
 def reference(language, word):
 	''' Returns the articles (singular and plural) combined with singular and plural for a given noun. '''
