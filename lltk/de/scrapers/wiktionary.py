@@ -83,4 +83,26 @@ class WiktionaryDe(TextScraper):
 				return result
 		return [None]
 
+	@TextScraper._needs_download
+	def comparative(self):
+
+		if 'JJ' in self.pos():
+			if self.tree.xpath(u'//div[@id="mw-content-text"]/p[@title="Trennungsmöglichkeiten am Zeilenumbruch"]'):
+				content = self._normalize(self.tree.xpath(u'//div[@id="mw-content-text"]/p[@title="Trennungsmöglichkeiten am Zeilenumbruch"]')[0].getnext().text_content())
+				result = re.findall('Komparativ[\d|\s]*: ([\w|\s]+)', content, re.U)
+				result = [x.strip() for x in result]
+				return result
+		return [None]
+
+	@TextScraper._needs_download
+	def superlative(self):
+
+		if 'JJ' in self.pos():
+			if self.tree.xpath(u'//div[@id="mw-content-text"]/p[@title="Trennungsmöglichkeiten am Zeilenumbruch"]'):
+				content = self._normalize(self.tree.xpath(u'//div[@id="mw-content-text"]/p[@title="Trennungsmöglichkeiten am Zeilenumbruch"]')[0].getnext().text_content())
+				result = re.findall('Superlativ[\d|\s]*: ([\w|\s]+)', content, re.U)
+				result = [x.strip() for x in result]
+				return result
+		return [None]
+
 register('de', WiktionaryDe)
