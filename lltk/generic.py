@@ -1,7 +1,7 @@
 #!/usr/bin/python
 # -*- coding: UTF-8 -*-
 
-__all__ = ['articles', 'plural', 'ipa', 'miniaturize', 'reference', 'translate', 'audiosample', 'samplesentence']
+__all__ = ['pos', 'articles', 'plural', 'ipa', 'conjugate', 'gender', 'miniaturize', 'comparative', 'superlative', 'reference', 'translate', 'audiosamples', 'textsamples', 'images']
 
 from decorators import _load_language, _load_language_or_die
 
