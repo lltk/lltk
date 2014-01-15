@@ -1,7 +1,7 @@
 #!/usr/bin/python
 # -*- coding: UTF-8 -*-
 
-__all__ = ['scrapers', 'scrape', 'pos', 'articles', 'plural', 'ipa', 'conjugate', 'gender']
+__all__ = ['scrapers', 'scrape', 'pos', 'articles', 'plural', 'ipa', 'conjugate', 'gender', 'comparative', 'superlative']
 
 import scrapers
 
@@ -41,3 +41,11 @@ def conjugate(word):
 def gender(word):
 	''' Returns the gender for a given word. '''
 	return scrape(word, 'gender')
+
+def comparative(word):
+	''' Returns the comparative for a given adjective. '''
+	return scrape(word, 'comparative')
+
+def superlative(word):
+	''' Returns the superlative for a given adjective. '''
+	return scrape(word, 'superlative')
