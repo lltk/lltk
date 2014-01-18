@@ -21,7 +21,7 @@ def plural(language, word):
 	pass
 
 @_load_language_or_die
-def conjugate(language, word):
+def conjugate(language, word, tense):
 	''' Returns the conjugation of a given verb. '''
 	pass
 
