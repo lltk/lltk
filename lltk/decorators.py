@@ -22,9 +22,9 @@ def _load_language(f):
 			raise LanguageNotSupported('The language ' + language.upper() + ' is not supported so far.')
 
 		if hasattr(_lltk, method):
-			function = eval('_lltk.' + method)
+			function = getattr(_lltk, method)
 			if callable(function):
-				return function(word)
+				return function(word, *args, **kwargs)
 		# No custom method implemented, yet. Continue as normal...
 		return f(language, word, *args, **kwargs)
 	return loader
@@ -48,9 +48,9 @@ def _load_language_or_die(f):
 			raise LanguageNotSupported('The language ' + language.upper() + ' is not supported so far.')
 
 		if hasattr(_lltk, method):
-			function = eval('_lltk.' + method)
+			function = getattr(_lltk, method)
 			if callable(function):
-				return function(word)
+				return function(word, *args, **kwargs)
 		# No custom method implemented, yet.
 		raise NotImplementedError('Method lltk.' + language + '.' + method +'() not implemented, yet.')
 	return loader
