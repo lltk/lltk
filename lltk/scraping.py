@@ -35,6 +35,16 @@ def discover(language):
 				else:
 					discovered[language][method] = [scraper]
 
+def scrape(language, method, word, *args, **kwargs):
+	''' Uses custom scrapers and calls provided method. '''
+
+	scrape = Scrape(language, word)
+	if hasattr(scrape, method):
+		function = getattr(scrape, method)
+		if callable(function):
+			return function(*args, **kwargs)
+	raise NotImplementedError('The method ' + method + '() is not implemented so far.')
+
 class Scrape(object):
 	''' Provides a generic scraping interface to all available scrapers for a language. '''
 
