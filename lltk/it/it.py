@@ -1,31 +1,23 @@
 #!/usr/bin/python
 # -*- coding: UTF-8 -*-
 
-__all__ = ['scrapers', 'scrape', 'pos', 'ipa', 'gender']
+__all__ = ['scrapers', 'scrape', 'pos', 'articles', 'plural', 'ipa', 'gender']
 
 import scrapers
+from ..scraping import scrape
+from ..decorators import language
 
 ISO639_1 = 'it'
-
-def scrape(word, method, mode = None):
-	''' Uses custom scrapers and calls provided method (with provided scraping mode). '''
-	# @TODO: Introduce different scraping modes
-
-	from ..scraping import Scrape
-
-	scrape = Scrape(ISO639_1, word)
-	if hasattr(scrape, method):
-		return eval('scrape.' + method + '()')
-	raise NotImplementedError
+scrape = language(ISO639_1)(scrape)
 
 def pos(word):
 	''' Returns a list of possible POS-tags (part-of-speech) for a given word. '''
-	return scrape(word, 'pos')
+	return scrape('pos', word)
 
 def ipa(word):
 	''' Returns the International Phonetic Alphabet (IPA) writing for a given word. '''
-	return scrape(word, 'ipa')
+	return scrape('ipa', word)
 
 def gender(word):
 	''' Returns the gender for a given word. '''
-	return scrape(word, 'gender')
+	return scrape('gender', word)

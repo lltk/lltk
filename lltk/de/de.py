@@ -4,48 +4,40 @@
 __all__ = ['scrapers', 'scrape', 'pos', 'articles', 'plural', 'ipa', 'conjugate', 'gender', 'comparative', 'superlative']
 
 import scrapers
+from ..scraping import scrape
+from ..decorators import language
 
 ISO639_1 = 'de'
-
-def scrape(word, method, mode = None):
-	''' Uses custom scrapers and calls provided method (with provided scraping mode). '''
-	# @TODO: Introduce different scraping modes
-
-	from ..scraping import Scrape
-
-	scrape = Scrape(ISO639_1, word)
-	if hasattr(scrape, method):
-		return eval('scrape.' + method + '()')
-	raise NotImplementedError
+scrape = language(ISO639_1)(scrape)
 
 def pos(word):
 	''' Returns a list of possible POS-tags (part-of-speech) for a given word. '''
-	return scrape(word, 'pos')
+	return scrape('pos', word)
 
 def articles(word):
 	''' Returns the articles (singular and plural) for a given noun. '''
-	return scrape(word, 'articles')
+	return scrape('articles', word)
 
 def plural(word):
 	''' Returns the plural version for a given noun. '''
-	return scrape(word, 'plural')
+	return scrape('plural', word)
 
 def ipa(word):
 	''' Returns the International Phonetic Alphabet (IPA) writing for a given word. '''
-	return scrape(word, 'ipa')
+	return scrape('ipa', word)
 
-def conjugate(word):
+def conjugate(word, tense):
 	''' Returns the conjugation of a given verb. '''
-	return scrape(word, 'conjugate')
+	return scrape('conjugate', word, tense)
 
 def gender(word):
 	''' Returns the gender for a given word. '''
-	return scrape(word, 'gender')
+	return scrape('gender', word)
 
 def comparative(word):
 	''' Returns the comparative for a given adjective. '''
-	return scrape(word, 'comparative')
+	return scrape('comparative', word)
 
 def superlative(word):
 	''' Returns the superlative for a given adjective. '''
-	return scrape(word, 'superlative')
+	return scrape('superlative', word)
