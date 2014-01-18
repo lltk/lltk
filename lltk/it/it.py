@@ -1,7 +1,7 @@
 #!/usr/bin/python
 # -*- coding: UTF-8 -*-
 
-__all__ = ['scrapers', 'scrape', 'pos', 'articles', 'plural', 'ipa', 'gender']
+__all__ = ['scrapers', 'scrape', 'pos', 'articles', 'plural', 'ipa', 'conjugate', 'gender']
 
 import scrapers
 from ..scraping import scrape
@@ -17,6 +17,10 @@ def pos(word):
 def ipa(word):
 	''' Returns the International Phonetic Alphabet (IPA) writing for a given word. '''
 	return scrape('ipa', word)
+
+def conjugate(word, tense):
+	''' Returns the conjugation of a given verb. '''
+	return scrape('conjugate', word, tense)
 
 def gender(word):
 	''' Returns the gender for a given word. '''
