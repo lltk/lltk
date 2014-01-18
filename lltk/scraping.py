@@ -57,7 +57,7 @@ class Scrape(object):
 		for method in self.methods:
 			# Just make sure to make the special methods available for now.
 			# A hook in __getattribute__ will take care of the rest.
-			self.__dict__[method] = lambda: ''
+			self.__dict__[method] = lambda *args, **kwargs: None
 
 	def __getattribute__(self, name):
 
@@ -67,9 +67,9 @@ class Scrape(object):
 			pass
 		else:
 			if name in methods:
-				f = lambda: self._scrape(name)
+				f =  lambda *args, **kwargs: self._scrape(name, *args, **kwargs)
 				f.func_name = name
-				f.func_doc = eval('self._scheduler(\'' + name + '\').next().' + name + '.func_doc')
+				f.func_doc = getattr(self._scheduler(name).next(), name).func_doc
 				return f
 		return super(Scrape, self).__getattribute__(name)
 
@@ -98,17 +98,17 @@ class Scrape(object):
 			for Scraper in discovered[self.language][method]:
 				yield Scraper
 
-	def _scrape(self, method):
+	def _scrape(self, method, *args, **kwargs):
 
 		for Scraper in self._scheduler(method):
 			scraper = Scraper(self.word)
-			result = eval('scraper.' + method + '()')
+			function = getattr(scraper, method)
+			result = function(*args, **kwargs)
 			if not self._isempty(result):
 				self.source = scraper
 				debug(scraper.name + ' is answering...')
 				return result
 			debug(scraper.name + ' didn\'t know. Keep looking...')
-
 
 class GenericScraper(object):
 	''' This is the generic base class that all custom scrapers should be derived from. '''
