@@ -52,7 +52,7 @@ When using the generic interface, LLTK will raise the `NotImplementedError` exce
  ```python
  sentences = lltk.generic.textsamples('es', u'jardín')
  for sentence in sentences:
- 	print sentences
+ 	print sentence
  ```
 
  * **View images** related to a given word (currently using [Google Images](http://images.google.com/)). Try the following:
@@ -65,7 +65,7 @@ When using the generic interface, LLTK will raise the `NotImplementedError` exce
 Requirements
 ------------
 
-The Language Learning Toolkit is written for Python 2.7. There is no support for Python 3, yet. Please install the following python packages: [requests](https://pypi.python.org/pypi/requests/), [lxml](https://pypi.python.org/pypi/lxml/3.3.5), [Pattern](https://pypi.python.org/pypi/Pattern/2.6), [functools32](https://pypi.python.org/pypi/functools32/3.2.3-1).
+The Language Learning Toolkit is written for Python 2.7. There is no support for Python 3, yet. Please install the following Python packages: [requests](https://pypi.python.org/pypi/requests/), [lxml](https://pypi.python.org/pypi/lxml/3.3.5), [Pattern](https://pypi.python.org/pypi/Pattern/2.6), [functools32](https://pypi.python.org/pypi/functools32/3.2.3-1).
 
 `sudo pip install requests lxml Pattern functools32`
 
