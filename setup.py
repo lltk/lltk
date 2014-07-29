@@ -8,8 +8,8 @@ from lltk import __author_email__
 from setuptools import setup, find_packages
 
 setup(
-	name = "Language Learning Toolkit",
-	description = "The Language Learning Toolkit (LLTK) performs a variety of tasks useful for language learning.",
+	name = "lltk",
+	description = "The Language Learning Toolkit (LLTK) performs a variety of tasks useful for (human) language learning.",
 	url = "http://github.com/markus-beuckelmann/lltk",
 	version = __version__,
 	author = __author__,
