@@ -3,8 +3,9 @@
 
 __author__ = 'Markus Beuckelmann'
 __author_email__ = 'email@markus-beuckelmann.de'
-__version__ = '0.1'
+__version__ = '0.1.0'
 
 __all__ = ['de', 'en', 'nl', 'it', 'es', 'fr', 'audiosamples', 'textsamples', 'images']
 
 DEBUG = False
+VERSION = __version__
