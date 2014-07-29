@@ -77,7 +77,7 @@ class Scrape(object):
 			pass
 		else:
 			if name in methods:
-				f =  lambda *args, **kwargs: self._scrape(name, *args, **kwargs)
+				f = lambda *args, **kwargs: self._scrape(name, *args, **kwargs)
 				f.func_name = name
 				f.func_doc = getattr(self._scheduler(name).next(), name).func_doc
 				return f
