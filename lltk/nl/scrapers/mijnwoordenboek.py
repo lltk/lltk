@@ -91,4 +91,4 @@ class MijnWoordenBoekNl(TextScraper):
 				return ['']
 		return [None]
 
-register('nl', MijnWoordenBoekNl)
+register(MijnWoordenBoekNl)

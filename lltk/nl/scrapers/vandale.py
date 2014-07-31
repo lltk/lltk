@@ -96,4 +96,4 @@ class VandaleNl(DictScraper):
 				return ['']
 		return [None]
 
-register('nl', VandaleNl)
+register(VandaleNl)

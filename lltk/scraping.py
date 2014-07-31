@@ -11,10 +11,13 @@ from helpers import debug
 scrapers = {}
 discovered = {}
 
-def register(language, scraper):
+def register(scraper):
 	''' Registers a scraper to make it available for the generic scraping interface '''
 
 	global scrapers
+	language = scraper('').language
+	if not language:
+		raise Exception('No language specified for your scraper.')
 	if scrapers.has_key(language):
 		scrapers[language].append(scraper)
 	else:
@@ -123,14 +126,14 @@ class Scrape(object):
 class GenericScraper(object):
 	''' Generic base class that all custom scrapers should be derived from. '''
 
-	def __init__(self, word, language = ''):
+	def __init__(self, word):
 
 		self.word = unicode(word)
 		self.name = 'Unknown'
 		self.license = None
 		self.url = ''
 		self.baseurl = ''
-		self.language = language
+		self.language = ''
 		self.page = None
 		self.tree = None
 

@@ -20,4 +20,4 @@ class VerbixEs(Verbix):
 		self.tenses['Future I'] = 'Futuro'
 		self.tenses['Future II'] = 'Futuro perfecto'
 
-register('es', VerbixEs)
+register(VerbixEs)

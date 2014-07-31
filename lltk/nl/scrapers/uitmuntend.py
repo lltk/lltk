@@ -106,4 +106,4 @@ class UitmuntendNl(DictScraper):
 				return genus
 			return 'n'
 
-register('nl', UitmuntendNl)
+register(UitmuntendNl)

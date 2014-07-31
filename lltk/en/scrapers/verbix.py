@@ -14,4 +14,4 @@ class VerbixEn(Verbix):
 
 		super(VerbixEn, self).__init__(word, 'en')
 
-register('en', VerbixEn)
+register(VerbixEn)

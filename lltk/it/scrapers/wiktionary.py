@@ -83,4 +83,4 @@ class WiktionaryIt(TextScraper):
 #				return result
 #		return [None]
 
-register('it', WiktionaryIt)
+register(WiktionaryIt)

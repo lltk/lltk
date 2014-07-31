@@ -105,4 +105,4 @@ class WiktionaryDe(TextScraper):
 				return result
 		return [None]
 
-register('de', WiktionaryDe)
+register(WiktionaryDe)

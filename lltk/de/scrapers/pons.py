@@ -97,4 +97,4 @@ class PonsDe(DictScraper):
 				return [self.word]
 		return [None]
 
-register('de', PonsDe)
+register(PonsDe)

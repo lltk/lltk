@@ -69,4 +69,4 @@ class LeoIt(DictScraper):
 				genus = re.findall('([m|f|n)])\.', element, re.U)[0]
 				return genus
 
-register('it', LeoIt)
+register(LeoIt)
