@@ -12,7 +12,7 @@ scrapers = {}
 discovered = {}
 
 def register(scraper):
-	''' Registers a scraper to make it available for the generic scraping interface '''
+	''' Registers a scraper to make it available for the generic scraping interface. '''
 
 	global scrapers
 	language = scraper('').language

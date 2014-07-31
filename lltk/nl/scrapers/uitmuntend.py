@@ -18,7 +18,7 @@ class UitmuntendNl(DictScraper):
 		self.language = 'nl'
 
 	def _normalize(self, string):
-		''' Sanitize a string. '''
+		''' Returns a sanitized string. '''
 
 		#string = re.sub(' \[[m|f|n|p]+?\]', '', string)
 		string = string.replace(' [p]', '')

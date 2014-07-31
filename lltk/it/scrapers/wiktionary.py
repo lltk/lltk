@@ -18,7 +18,7 @@ class WiktionaryIt(TextScraper):
 		self.language = 'it'
 
 #	def _normalize(self, string):
-#		''' Sanitize a string. '''
+#		''' Returns a sanitized string. '''
 
 #		string = string.replace(u'\xb7', '')
 #		string = string.strip()
