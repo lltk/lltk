@@ -24,7 +24,7 @@ class MijnWoordenBoekNl(TextScraper):
 
 	@TextScraper._needs_download
 	def pos(self):
-		''' Try to decide about the part of speech. '''
+		''' Tries to decide about the part of speech. '''
 
 		tags = []
 		if self.tree.xpath('//div[@class="grad733100"]/h2[@class="inline"]//text()'):

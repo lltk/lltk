@@ -34,7 +34,7 @@ class VandaleNl(DictScraper):
 
 	@DictScraper._needs_elements
 	def pos(self, element = None):
-		''' Try to decide about the part of speech. '''
+		''' Tries to decide about the part of speech. '''
 
 		tags = []
 		if element:
@@ -54,7 +54,7 @@ class VandaleNl(DictScraper):
 
 	@DictScraper._needs_elements
 	def articles(self):
-		''' Try to scrape the correct articles for singular and plural from vandale.nl. '''
+		''' Tries to scrape the correct articles for singular and plural from vandale.nl. '''
 
 		result = [None, None]
 		element = self._first('NN')
@@ -71,7 +71,7 @@ class VandaleNl(DictScraper):
 
 	@DictScraper._needs_elements
 	def plural(self):
-		''' Try to scrape the plural version from vandale.nl. '''
+		''' Tries to scrape the plural version from vandale.nl. '''
 
 		element = self._first('NN')
 		if element:
@@ -86,7 +86,7 @@ class VandaleNl(DictScraper):
 
 	@DictScraper._needs_elements
 	def miniaturize(self):
-		''' Try to scrape the miniaturized version from vandale.nl. '''
+		''' Tries to scrape the miniaturized version from vandale.nl. '''
 
 		element = self._first('NN')
 		if element:

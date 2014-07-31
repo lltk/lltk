@@ -38,7 +38,7 @@ class UitmuntendNl(DictScraper):
 
 	@DictScraper._needs_elements
 	def pos(self, element = None):
-		''' Try to decide about the part of speech. '''
+		''' Tries to decide about the part of speech. '''
 
 		tags = []
 		if element:
@@ -58,7 +58,7 @@ class UitmuntendNl(DictScraper):
 
 	@DictScraper._needs_elements
 	def articles(self):
-		''' Try to scrape the correct articles for singular and plural from uitmuntend.nl. '''
+		''' Tries to scrape the correct articles for singular and plural from uitmuntend.nl. '''
 
 		result = [None, None]
 		element = self._first('NN')
@@ -80,7 +80,7 @@ class UitmuntendNl(DictScraper):
 
 	@DictScraper._needs_elements
 	def plural(self):
-		''' Try to scrape the plural version from uitmuntend.nl. '''
+		''' Tries to scrape the plural version from uitmuntend.nl. '''
 
 		element = self._first('NN')
 		if element:
@@ -96,7 +96,7 @@ class UitmuntendNl(DictScraper):
 
 	@DictScraper._needs_elements
 	def gender(self):
-		''' Try to scrape the gender for a given noun from uitmuntend.nl. '''
+		''' Tries to scrape the gender for a given noun from uitmuntend.nl. '''
 
 		element = self._first('NN')
 		if element:

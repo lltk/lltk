@@ -33,7 +33,7 @@ class BablaIt(DictScraper):
 
 	@DictScraper._needs_elements
 	def pos(self, element = None):
-		''' Try to decide about the part of speech. '''
+		''' Tries to decide about the part of speech. '''
 
 		tags = []
 		if element:
@@ -51,7 +51,7 @@ class BablaIt(DictScraper):
 
 	@DictScraper._needs_elements
 	def gender(self):
-		''' Try to scrape the gender for a given noun from babl.la. '''
+		''' Tries to scrape the gender for a given noun from babl.la. '''
 
 		element = self._first('NN')
 		if element:

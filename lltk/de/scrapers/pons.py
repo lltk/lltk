@@ -44,7 +44,7 @@ class PonsDe(DictScraper):
 
 	@DictScraper._needs_elements
 	def pos(self, element = None):
-		''' Try to decide about the part of speech. '''
+		''' Tries to decide about the part of speech. '''
 
 		tags = []
 		if element:
@@ -62,7 +62,7 @@ class PonsDe(DictScraper):
 
 	@DictScraper._needs_elements
 	def articles(self):
-		''' Try to scrape the correct articles for singular and plural from de.pons.eu. '''
+		''' Tries to scrape the correct articles for singular and plural from de.pons.eu. '''
 
 		result = [None, None]
 		element = self._first('NN')
@@ -78,7 +78,7 @@ class PonsDe(DictScraper):
 
 	@DictScraper._needs_elements
 	def plural(self):
-		''' Try to scrape the plural version from pons.eu. '''
+		''' Tries to scrape the plural version from pons.eu. '''
 
 		element = self._first('NN')
 		if element:

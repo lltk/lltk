@@ -28,7 +28,7 @@ class WiktionaryDe(TextScraper):
 
 	@TextScraper._needs_download
 	def pos(self):
-		''' Try to decide about the part of speech. '''
+		''' Tries to decide about the part of speech. '''
 
 		tags = []
 		if self.tree.xpath('//div[@id="mw-content-text"]//a[@title="Hilfe:Wortart"]/text()'):

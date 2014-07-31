@@ -216,18 +216,24 @@ DIALECTS = {
 }
 
 def humanize(iso639):
+	''' Converts ISO639 language identifier to the corresponding (human readable) language name. '''
+
 	for i, element in enumerate(LANGUAGES):
 		if element[1] == iso639 or element[2] == iso639:
 			return element[0]
 	return None
 
 def iso639_1to3(iso639):
+	''' Converts ISO639-1 language identifier to ISO639-3. '''
+
 	for i, element in enumerate(LANGUAGES):
 		if element[1] == iso639:
 			return element[2]
 	return None
 
 def iso639_3to1(iso639):
+	''' Converts ISO639-3 language identifier to ISO639-1. '''
+
 	for i, element in enumerate(LANGUAGES):
 		if element[2] == iso639:
 			return element[1]
