@@ -18,7 +18,7 @@ class WiktionaryIt(TextScraper):
 		self.language = 'it'
 
 #	def _normalize(self, string):
-#		''' Sanitize a string. '''
+#		''' Returns a sanitized string. '''
 
 #		string = string.replace(u'\xb7', '')
 #		string = string.strip()
@@ -26,7 +26,7 @@ class WiktionaryIt(TextScraper):
 
 	@TextScraper._needs_download
 	def pos(self):
-		''' Try to decide about the part of speech. '''
+		''' Tries to decide about the part of speech. '''
 
 		tags = []
 		if self.tree.xpath('//div[@id="mw-content-text"]/h3/span/i/a/text()'):
@@ -83,4 +83,4 @@ class WiktionaryIt(TextScraper):
 #				return result
 #		return [None]
 
-register('it', WiktionaryIt)
+register(WiktionaryIt)

@@ -2,6 +2,7 @@
 # -*- coding: UTF-8 -*-
 
 def download(url, filename, overwrite = False):
+	''' Downloads a file via HTTP. '''
 
 	from requests import get
 	from os.path import exists
@@ -17,12 +18,13 @@ def download(url, filename, overwrite = False):
 	return False
 
 def play(filename):
+	''' Uses /usr/bin/mpg123 to play MP3 files. '''
 
 	from subprocess import call
 	call(['/usr/bin/mpg123', '-q', filename])
 
 def debug(message):
-	''' Prints message if debug mode is enabled. '''
+	''' Prints a message if debug mode is enabled. '''
 
 	from lltk import DEBUG
 	if DEBUG:

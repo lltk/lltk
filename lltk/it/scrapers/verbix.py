@@ -20,4 +20,4 @@ class VerbixIt(Verbix):
 		self.tenses['Future I'] = 'Futuro'
 		self.tenses['Future II'] = 'Futuro anteriore'
 
-register('it', VerbixIt)
+register(VerbixIt)

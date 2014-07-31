@@ -2,7 +2,7 @@
 # -*- coding: UTF-8 -*-
 
 class LanguageNotSupported(Exception):
-	''' Used to indicate that a certain language is not supported '''
+	''' Used to indicate that a certain language is not supported. '''
 	pass
 
 class GoingTooFast(Exception):

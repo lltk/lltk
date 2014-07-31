@@ -24,4 +24,4 @@ class VerbixDe(Verbix):
 		string = string.strip()
 		return string
 
-register('de', VerbixDe)
+register(VerbixDe)

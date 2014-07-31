@@ -17,4 +17,4 @@ class VerbixNl(Verbix):
 		self.tenses['Pluperfect'] = 'Past Perfect'
 		self.tenses['Future II'] = 'Future Perfect'
 
-register('nl', VerbixNl)
+register(VerbixNl)

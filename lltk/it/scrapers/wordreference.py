@@ -18,7 +18,7 @@ class WordreferenceIt(DictScraper):
 
 	@DictScraper._needs_download
 	def gender(self):
-		''' Try to scrape the correct gender for a given word from wordreference.com '''
+		''' Tries to scrape the correct gender for a given word from wordreference.com '''
 
 		elements = self.tree.xpath('//table[@class="WRD"]')
 		if len(elements):

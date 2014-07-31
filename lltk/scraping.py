@@ -11,17 +11,20 @@ from helpers import debug
 scrapers = {}
 discovered = {}
 
-def register(language, scraper):
-	''' Register a scraper to make it available for the generic scraping interface '''
+def register(scraper):
+	''' Registers a scraper to make it available for the generic scraping interface. '''
 
 	global scrapers
+	language = scraper('').language
+	if not language:
+		raise Exception('No language specified for your scraper.')
 	if scrapers.has_key(language):
 		scrapers[language].append(scraper)
 	else:
 		scrapers[language] = [scraper]
 
 def discover(language):
-	''' Discover all registered scrapers to be used for the generic scraping interface. '''
+	''' Discovers all registered scrapers to be used for the generic scraping interface. '''
 
 	global scrapers, discovered
 	for language in scrapers.iterkeys():
@@ -121,16 +124,16 @@ class Scrape(object):
 			debug(scraper.name + ' didn\'t know. Keep looking...')
 
 class GenericScraper(object):
-	''' This is the generic base class that all custom scrapers should be derived from. '''
+	''' Generic base class that all custom scrapers should be derived from. '''
 
-	def __init__(self, word, language = ''):
+	def __init__(self, word):
 
 		self.word = unicode(word)
 		self.name = 'Unknown'
 		self.license = None
 		self.url = ''
 		self.baseurl = ''
-		self.language = language
+		self.language = ''
 		self.page = None
 		self.tree = None
 
@@ -149,41 +152,42 @@ class GenericScraper(object):
 		return wrapper
 
 	def download(self):
-		''' Download HTML from baseurl. '''
+		''' Downloads HTML from url. '''
 
 		self.page = requests.get(self.url)
 		self.tree = html.fromstring(self.page.text)
 
 	def pos(self):
-		''' Try to decide about the part of speech. '''
+		''' Tries to decide about the part of speech. '''
 		return []
 
 	def isdownloaded(self):
+		''' Returns True if download() has already been called. '''
 		return bool(self.page)
 
 	def isnoun(self):
-		''' Try to decide whether a given word is a noun. '''
+		''' Tries to decide whether a given word is a noun. '''
 
 		if 'NN' in self.pos():
 			return True
 		return False
 
 	def isverb(self):
-		''' Try to decide whether a given word is a verb. '''
+		''' Tries to decide whether a given word is a verb. '''
 
 		if 'VB' in self.pos():
 			return True
 		return False
 
 	def isadjective(self):
-		''' Try to decide whether a given word is an adjective. '''
+		''' Tries to decide whether a given word is an adjective. '''
 
 		if 'JJ' in self.pos():
 			return True
 		return False
 
 	def hasplural(self):
-		''' Try to find out whether a given noun has a plural form. '''
+		''' Tries to find out whether a given noun has a plural form. '''
 
 		plural = self.plural()
 		if plural == ['']:
@@ -212,7 +216,7 @@ class DictScraper(GenericScraper):
 		return wrapper
 
 	def _first(self, tag):
-		''' Return the first element with required POS-tag. '''
+		''' Returns the first element with required POS-tag. '''
 
 		self.getelements()
 		for element in self.elements:

@@ -29,4 +29,4 @@ class VerbixFr(Verbix):
 		string = string.strip()
 		return string
 
-register('fr', VerbixFr)
+register(VerbixFr)

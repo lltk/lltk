@@ -46,7 +46,7 @@ class Verbix(TextScraper):
 		return conjugation
 
 	def conjugate(self, tense):
-		''' Try to conjugate a given verb using verbix.com.'''
+		''' Tries to conjugate a given verb using verbix.com.'''
 
 		if self.tenses.has_key(tense):
 			return self._extract(self.tenses[tense])

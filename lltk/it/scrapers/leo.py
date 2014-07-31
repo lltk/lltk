@@ -43,7 +43,7 @@ class LeoIt(DictScraper):
 
 	@DictScraper._needs_elements
 	def pos(self, element = None):
-		''' Try to decide about the part of speech. '''
+		''' Tries to decide about the part of speech. '''
 
 		tags = []
 		if element:
@@ -61,7 +61,7 @@ class LeoIt(DictScraper):
 
 	@DictScraper._needs_elements
 	def gender(self):
-		''' Try to scrape the gender for a given noun from leo.org. '''
+		''' Tries to scrape the gender for a given noun from leo.org. '''
 
 		element = self._first('NN')
 		if element:
@@ -69,4 +69,4 @@ class LeoIt(DictScraper):
 				genus = re.findall('([m|f|n)])\.', element, re.U)[0]
 				return genus
 
-register('it', LeoIt)
+register(LeoIt)
