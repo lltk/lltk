@@ -1,7 +1,7 @@
 #!/usr/bin/python
 # -*- coding: UTF-8 -*-
 
-__all__ = ['register', 'discover', 'Scrape', 'GenericScraper', 'TextScraper', 'DictScraper']
+__all__ = ['register', 'discover', 'scrape', 'isempty', 'Scrape', 'GenericScraper', 'DictScraper', 'TextScraper']
 
 import requests
 from lxml import html

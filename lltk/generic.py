@@ -1,7 +1,7 @@
 #!/usr/bin/python
 # -*- coding: UTF-8 -*-
 
-__all__ = ['pos', 'articles', 'plural', 'ipa', 'conjugate', 'gender', 'miniaturize', 'comparative', 'superlative', 'reference', 'translate', 'audiosamples', 'textsamples', 'images']
+__all__ = ['pos', 'articles', 'plural', 'conjugate', 'ipa', 'gender', 'miniaturize', 'comparative', 'superlative', 'reference', 'translate', 'audiosamples', 'textsamples', 'images']
 
 from lltk.decorators import _load_language, _load_language_or_die
 

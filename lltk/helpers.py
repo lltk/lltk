@@ -1,6 +1,8 @@
 #!/usr/bin/python
 # -*- coding: UTF-8 -*-
 
+__all__ = ['download', 'play', 'debug', 'open_in_browser', 'debugconsole', 'trace']
+
 def download(url, filename, overwrite = False):
 	''' Downloads a file via HTTP. '''
 
