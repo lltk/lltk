@@ -6,7 +6,7 @@ __all__ = ['register', 'discover', 'Scrape', 'GenericScraper', 'TextScraper', 'D
 import requests
 from lxml import html
 from functools import wraps
-from helpers import debug
+from lltk.helpers import debug
 
 scrapers = {}
 discovered = {}

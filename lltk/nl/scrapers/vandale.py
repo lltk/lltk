@@ -5,7 +5,7 @@ import requests
 from lxml import html
 import re
 
-from ...scraping import DictScraper, register
+from lltk.scraping import DictScraper, register
 
 class VandaleNl(DictScraper):
 
