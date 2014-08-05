@@ -33,7 +33,7 @@ def _load_language(f):
 			else:
 				_lltk = __import__('lltk.' + language, globals(), locals(), [method], -1)
 		except ImportError:
-			from exceptions import LanguageNotSupported
+			from lltk.exceptions import LanguageNotSupported
 			raise LanguageNotSupported('The language ' + language.upper() + ' is not supported so far.')
 
 		if hasattr(_lltk, method):
@@ -59,7 +59,7 @@ def _load_language_or_die(f):
 			else:
 				_lltk = __import__('lltk.' + language, globals(), locals(), [method], -1)
 		except ImportError:
-			from exceptions import LanguageNotSupported
+			from lltk.exceptions import LanguageNotSupported
 			raise LanguageNotSupported('The language ' + language.upper() + ' is not supported so far.')
 
 		if hasattr(_lltk, method):

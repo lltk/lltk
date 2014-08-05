@@ -5,8 +5,8 @@ import requests
 from lxml import html
 import re
 
-from ...scrapers import Verbix
-from ...scraping import register
+from lltk.scrapers import Verbix
+from lltk.scraping import register
 
 class VerbixNl(Verbix):
 

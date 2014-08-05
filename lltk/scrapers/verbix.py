@@ -5,8 +5,8 @@ import requests
 from lxml import html
 import re
 
-from ..scraping import TextScraper
-from ..locale import humanize
+from lltk.scraping import TextScraper
+from lltk.locale import humanize
 
 class Verbix(TextScraper):
 

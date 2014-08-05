@@ -4,7 +4,7 @@
 import requests
 import json
 
-from ..helpers import debug
+from lltk.helpers import debug
 
 def google(language, word, n = 20, *args, **kwargs):
 	''' Downloads suitable images for a given word from Google Images. '''

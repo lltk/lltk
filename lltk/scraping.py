@@ -6,7 +6,7 @@ __all__ = ['register', 'discover', 'Scrape', 'GenericScraper', 'TextScraper', 'D
 import requests
 from lxml import html
 from functools import wraps
-from helpers import debug
+from lltk.helpers import debug
 
 scrapers = {}
 discovered = {}
@@ -48,6 +48,22 @@ def scrape(language, method, word, *args, **kwargs):
 			return function(*args, **kwargs)
 	raise NotImplementedError('The method ' + method + '() is not implemented so far.')
 
+def isempty(result):
+	''' Finds out if a scraping result should be considered empty. '''
+
+	if isinstance(result, list):
+		for element in result:
+			if isinstance(element, list):
+				if not isempty(element):
+					return False
+			else:
+				if element is not None:
+					return False
+	else:
+		if result is not None:
+			return False
+	return True
+
 class Scrape(object):
 	''' Provides a generic scraping interface to all available scrapers for a language. '''
 
@@ -86,22 +102,6 @@ class Scrape(object):
 				return f
 		return super(Scrape, self).__getattribute__(name)
 
-	def _isempty(self, response):
-		''' Finds out if a scraping result should be considered empty. '''
-
-		if isinstance(response, list):
-			for element in response:
-				if isinstance(element, list):
-					if not self._isempty(element):
-						return False
-				else:
-					if element is not None:
-						return False
-		else:
-			if response is not None:
-				return False
-		return True
-
 	def _scheduler(self, method, mode = None):
 		''' Iterates over all available scrapers. '''
 		# @TODO: Introducte different modes such as random, ...
@@ -117,7 +117,7 @@ class Scrape(object):
 			scraper = Scraper(self.word)
 			function = getattr(scraper, method)
 			result = function(*args, **kwargs)
-			if not self._isempty(result):
+			if not isempty(result):
 				self.source = scraper
 				debug(scraper.name + ' is answering...')
 				return result

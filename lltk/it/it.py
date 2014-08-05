@@ -4,8 +4,8 @@
 __all__ = ['scrapers', 'scrape', 'pos', 'articles', 'plural', 'ipa', 'conjugate', 'gender']
 
 import scrapers
-from ..scraping import scrape
-from ..decorators import language
+from lltk.scraping import scrape
+from lltk.decorators import language
 
 ISO639_1 = 'it'
 scrape = language(ISO639_1)(scrape)
