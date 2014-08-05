@@ -1,7 +1,7 @@
 #!/usr/bin/python
 # -*- coding: UTF-8 -*-
 
-__all__ = ['isempty']
+__all__ = ['isempty', 'method2pos']
 
 def isempty(result):
 	''' Finds out if a scraping result should be considered empty. '''
@@ -18,3 +18,16 @@ def isempty(result):
 		if result is not None:
 			return False
 	return True
+
+def method2pos(method):
+	''' Returns a list of valid POS-tags for a given method. '''
+	
+	if method in ('articles', 'plural', 'miniaturize', 'gender'):
+		pos = ['NN']
+	elif method in ('conjugate',):
+		pos = ['VB']
+	elif method in ('comparative, superlative'):
+		pos = ['JJ']
+	else:
+		pos = ['*']
+	return pos
