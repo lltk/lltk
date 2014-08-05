@@ -1,11 +1,13 @@
 #!/usr/bin/python
 # -*- coding: UTF-8 -*-
 
-__all__ = ['register', 'discover', 'scrape', 'isempty', 'Scrape', 'GenericScraper', 'DictScraper', 'TextScraper']
+__all__ = ['register', 'discover', 'scrape', 'Scrape', 'GenericScraper', 'DictScraper', 'TextScraper']
 
 import requests
 from lxml import html
 from functools import wraps
+
+from lltk.utils import isempty
 from lltk.helpers import debug
 
 scrapers = {}
@@ -47,22 +49,6 @@ def scrape(language, method, word, *args, **kwargs):
 		if callable(function):
 			return function(*args, **kwargs)
 	raise NotImplementedError('The method ' + method + '() is not implemented so far.')
-
-def isempty(result):
-	''' Finds out if a scraping result should be considered empty. '''
-
-	if isinstance(result, list):
-		for element in result:
-			if isinstance(element, list):
-				if not isempty(element):
-					return False
-			else:
-				if element is not None:
-					return False
-	else:
-		if result is not None:
-			return False
-	return True
 
 class Scrape(object):
 	''' Provides a generic scraping interface to all available scrapers for a language. '''
