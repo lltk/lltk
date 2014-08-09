@@ -7,6 +7,7 @@ import requests
 from lxml import html
 from functools import wraps
 
+from lltk.caching import cached
 from lltk.utils import isempty
 from lltk.helpers import debug
 
@@ -102,6 +103,10 @@ class Scrape(object):
 		for Scraper in self._scheduler(method):
 			scraper = Scraper(self.word)
 			function = getattr(scraper, method)
+			key = '-'.join([scraper.language, method, scraper.name.lower(), scraper.word.lower()])
+			from datetime import datetime
+			extradata = {'type' : 'lltk-scraping-cache','language' : scraper.language, 'word' : scraper.word, 'method' : method, 'source' : scraper.name, 'url' : scraper.url, 'added' : datetime.now().strftime('%Y-%m-%dT%H:%M:%S')}
+			function = cached(key, extradata)(function)
 			result = function(*args, **kwargs)
 			if not isempty(result):
 				self.source = scraper
