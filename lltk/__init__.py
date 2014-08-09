@@ -7,5 +7,7 @@ __version__ = '0.1.2'
 
 __all__ = ['de', 'en', 'nl', 'it', 'es', 'fr', 'audiosamples', 'textsamples', 'images']
 
-DEBUG = False
 VERSION = __version__
+
+import lltk.config as config
+config['version'] = __version__
