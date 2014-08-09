@@ -28,8 +28,8 @@ def play(filename):
 def debug(message):
 	''' Prints a message if debug mode is enabled. '''
 
-	from lltk import DEBUG
-	if DEBUG:
+	import lltk.config as config
+	if config['debug']:
 		from termcolor import colored
 		print colored('@LLTK-DEBUG: ' + message, 'yellow')
 
