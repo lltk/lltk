@@ -1,6 +1,8 @@
 #!/usr/bin/python
 # -*- coding: UTF-8 -*-
 
+__all__ = ['download', 'play', 'debug', 'open_in_browser', 'debugconsole', 'trace']
+
 def download(url, filename, overwrite = False):
 	''' Downloads a file via HTTP. '''
 
@@ -26,8 +28,8 @@ def play(filename):
 def debug(message):
 	''' Prints a message if debug mode is enabled. '''
 
-	from lltk import DEBUG
-	if DEBUG:
+	import lltk.config as config
+	if config['debug']:
 		from termcolor import colored
 		print colored('@LLTK-DEBUG: ' + message, 'yellow')
 

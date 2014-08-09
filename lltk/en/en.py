@@ -4,8 +4,8 @@
 __all__ = ['scrapers', 'scrape', 'conjugate']
 
 import scrapers
-from ..scraping import scrape
-from ..decorators import language
+from lltk.scraping import scrape
+from lltk.decorators import language
 
 ISO639_1 = 'en'
 scrape = language(ISO639_1)(scrape)

@@ -5,7 +5,7 @@ import requests
 from lxml import html
 import re
 
-from ...scraping import TextScraper, register
+from lltk.scraping import TextScraper, register
 
 class WiktionaryIt(TextScraper):
 

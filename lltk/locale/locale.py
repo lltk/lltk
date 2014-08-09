@@ -1,6 +1,8 @@
 #!/usr/bin/python
 # -*- coding: UTF-8 -*-
 
+__all__ = ['LANGUAGES', 'DIALECTS', 'humanize', 'iso639_1to3', 'iso639_3to1']
+
 # Tuple containing (name, iso-639-1, iso-639-3)
 LANGUAGES = (
 	(u'Swahili', 'sw', 'swa'),

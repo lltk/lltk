@@ -1,12 +1,15 @@
 #!/usr/bin/python
 # -*- coding: UTF-8 -*-
 
-__all__ = ['register', 'discover', 'Scrape', 'GenericScraper', 'TextScraper', 'DictScraper']
+__all__ = ['register', 'discover', 'scrape', 'Scrape', 'GenericScraper', 'DictScraper', 'TextScraper']
 
 import requests
 from lxml import html
 from functools import wraps
-from helpers import debug
+
+from lltk.caching import cached
+from lltk.utils import isempty
+from lltk.helpers import debug
 
 scrapers = {}
 discovered = {}
@@ -41,9 +44,9 @@ def discover(language):
 def scrape(language, method, word, *args, **kwargs):
 	''' Uses custom scrapers and calls provided method. '''
 
-	scrape = Scrape(language, word)
-	if hasattr(scrape, method):
-		function = getattr(scrape, method)
+	scraper = Scrape(language, word)
+	if hasattr(scraper, method):
+		function = getattr(scraper, method)
 		if callable(function):
 			return function(*args, **kwargs)
 	raise NotImplementedError('The method ' + method + '() is not implemented so far.')
@@ -86,22 +89,6 @@ class Scrape(object):
 				return f
 		return super(Scrape, self).__getattribute__(name)
 
-	def _isempty(self, response):
-		''' Finds out if a scraping result should be considered empty. '''
-
-		if isinstance(response, list):
-			for element in response:
-				if isinstance(element, list):
-					if not self._isempty(element):
-						return False
-				else:
-					if element is not None:
-						return False
-		else:
-			if response is not None:
-				return False
-		return True
-
 	def _scheduler(self, method, mode = None):
 		''' Iterates over all available scrapers. '''
 		# @TODO: Introducte different modes such as random, ...
@@ -116,8 +103,12 @@ class Scrape(object):
 		for Scraper in self._scheduler(method):
 			scraper = Scraper(self.word)
 			function = getattr(scraper, method)
+			key = '-'.join([scraper.language, method, scraper.name.lower(), scraper.word.lower()])
+			from datetime import datetime
+			extradata = {'type' : 'lltk-scraping-cache','language' : scraper.language, 'word' : scraper.word, 'method' : method, 'source' : scraper.name, 'url' : scraper.url, 'added' : datetime.now().strftime('%Y-%m-%dT%H:%M:%S')}
+			function = cached(key, extradata)(function)
 			result = function(*args, **kwargs)
-			if not self._isempty(result):
+			if not isempty(result):
 				self.source = scraper
 				debug(scraper.name + ' is answering...')
 				return result

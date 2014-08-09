@@ -5,7 +5,7 @@ import requests
 from lxml import html
 import re
 
-from ...scraping import DictScraper, register
+from lltk.scraping import DictScraper, register
 
 class PonsDe(DictScraper):
 
@@ -31,7 +31,7 @@ class PonsDe(DictScraper):
 		super(PonsDe, self).download()
 		if self.tree.xpath('//div[@class="error"]'):
 			# We're going too fast. Too many queries in a short time
-			from ..exceptions import GoingTooFast
+			from lltk.exceptions import GoingTooFast
 			raise GoingTooFast('Too many queries in a short time. Hit the break.')
 
 	@DictScraper._needs_download

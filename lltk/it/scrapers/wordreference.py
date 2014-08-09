@@ -5,7 +5,7 @@ import requests
 from lxml import html
 from collections import Counter
 
-from ...scraping import DictScraper, register
+from lltk.scraping import DictScraper, register
 
 class WordreferenceIt(DictScraper):
 
