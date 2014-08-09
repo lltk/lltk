@@ -17,12 +17,15 @@ setup(
 	license = "LGPL",
 	keywords = "language learning toolkit lltk",
 	install_requires = [
-		'requests',
-		'lxml',
-		'Pattern',
-		'functools32',
-		'textblob',
+		"requests",
+		"lxml",
+		"Pattern",
+		"functools32",
+		"textblob",
 	],
+	extras_require = {
+		"couchdb" : ["CouchDB>=0.10"],
+	},
 	packages = find_packages(),
 	classifiers = [
 		"Development Status :: 3 - Alpha",

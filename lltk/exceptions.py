@@ -16,3 +16,6 @@ class IncorrectForvoAPIKey(Exception):
 class DailyForvoLimitExceeded(Exception):
 	''' Used when the daily Forvo API limit is exceeded. '''
 	pass
+
+class CacheFatalError(Exception):
+	''' Used to indicate that the cache backend is not properly configured. '''
