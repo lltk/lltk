@@ -16,3 +16,7 @@ class IncorrectForvoAPIKey(Exception):
 class DailyForvoLimitExceeded(Exception):
 	''' Used when the daily Forvo API limit is exceeded. '''
 	pass
+	
+class ConfigurationError(Exception):
+	''' Used when a configuration file is invalid or non-existent. '''
+	pass
