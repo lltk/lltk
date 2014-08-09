@@ -19,3 +19,4 @@ class DailyForvoLimitExceeded(Exception):
 
 class CacheFatalError(Exception):
 	''' Used to indicate that the cache backend is not properly configured. '''
+	pass
