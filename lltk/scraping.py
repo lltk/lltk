@@ -49,7 +49,8 @@ def scrape(language, method, word, *args, **kwargs):
 		function = getattr(scraper, method)
 		if callable(function):
 			return function(*args, **kwargs)
-	raise NotImplementedError('The method ' + method + '() is not implemented so far.')
+	else:
+		raise NotImplementedError('The method ' + method + '() is not implemented so far.')
 
 class Scrape(object):
 	''' Provides a generic scraping interface to all available scrapers for a language. '''
