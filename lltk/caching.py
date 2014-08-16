@@ -79,6 +79,7 @@ class GenericCache(object):
 	def __init__(self, *args, **kwargs):
 
 		self.name = 'Unkown'
+		self.connection = False
 		self.server = None
 		self.port = None
 		self.user = None
@@ -94,13 +95,30 @@ class GenericCache(object):
 			self.database = kwargs['database']
 		if kwargs.has_key('filename'):
 			self.filename = kwargs['filename']
-		pass
 
 	def __del__(self):
 		self.commit()
 
+	def __str__(self):
+		return '%s cache backend' % (self.name)
+
+	@classmethod
+	def needsconnection(self, f):
+		''' Decorator used to make sure that the connection has been established. '''
+
+		@wraps(f)
+		def wrapper(self, *args, **kwargs):
+			if not self.connection:
+				self.connect()
+			return f(self, *args, **kwargs)
+		return wrapper
+
 	def setup(self):
 		''' Runs the initial setup for the cache. '''
+		pass
+
+	def connect(self):
+		''' Establishes the connection to the backend. '''
 		pass
 
 	def exists(self, key):
@@ -136,7 +154,7 @@ class NoCache(GenericCache):
 
 register(NoCache)
 
-# Setup the NoCache() cache as default...
+# Setup the NoCache() cache for now...
 cache = NoCache()
 # Import and register all available caches...
 import lltk.caches
