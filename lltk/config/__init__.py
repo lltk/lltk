@@ -37,11 +37,15 @@ class Config(object):
 	def load(self, filename, replace = False):
 		''' Loads a configuration file (JSON). '''
 
-		import os, json
+		import os, json, re
 		if os.path.exists(filename):
 			f = open(filename, 'r')
+			content = f.read()
+			from IPython import embed; embed()
+			content = re.sub('[\t ]*?[#].*?\n', '', content)
+			print content
 			try:
-				settings = json.load(f)
+				settings = json.loads(content)
 			except ValueError:
 				# This means that the configuration file is not a valid JSON document
 				from lltk.exceptions import ConfigurationError
