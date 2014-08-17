@@ -18,14 +18,20 @@ if couchdb:
 
 			super(CouchDBCache, self).__init__(*args, **kwargs)
 			self.name = 'CouchDB'
+			self.couch = None
+			self.db = None
 			if not self.server:
 				self.server = 'localhost'
 			if not self.port:
 				self.port = 5984
 			if not self.database:
 				self.database = 'lltk'
-			self.couch = couchdb.Server(url = 'http://' + self.server + ':' + str(self.port) + '/')
+
+		def connect(self):
+			''' Establishes the connection to the backend. '''
+
 			from socket import error as SocketError
+			self.couch = couchdb.Server(url = 'http://' + self.server + ':' + str(self.port) + '/')
 			try:
 				self.db = self.couch[self.database]
 			except SocketError:
@@ -35,7 +41,8 @@ if couchdb:
 			except ResourceNotFound:
 				# This means that the database does not exist
 				if self.setup():
-					self.__init__(*args, **kwargs)
+					self.connect()
+			self.connection = True
 
 		def setup(self):
 			''' Runs the initial setup for the CouchDB cache. '''
@@ -43,6 +50,7 @@ if couchdb:
 			self.db = self.couch.create(self.database)
 			return True
 
+		@GenericCache.needsconnection
 		def exists(self, key):
 			''' Checks if a document is cached. '''
 
@@ -50,6 +58,7 @@ if couchdb:
 				return True
 			return False
 
+		@GenericCache.needsconnection
 		def get(self, key):
 			''' Retrieves a document from the CouchDB cache (by unique identifier). '''
 
@@ -57,6 +66,7 @@ if couchdb:
 				return self.db[key]['result']
 			return None
 
+		@GenericCache.needsconnection
 		def put(self, key, value, extradata = {}):
 			''' Caches a document. '''
 
@@ -65,11 +75,13 @@ if couchdb:
 
 			return self.db.save(document)
 
+		@GenericCache.needsconnection
 		def delete(self, document):
 			''' Remove a document from the cache (by unique identifier). '''
 
 			return self.db.delete(document)
 
+		@GenericCache.needsconnection
 		def commit(self):
 			''' Ensures that all changes are committed to disc. '''
 

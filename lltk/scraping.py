@@ -49,7 +49,8 @@ def scrape(language, method, word, *args, **kwargs):
 		function = getattr(scraper, method)
 		if callable(function):
 			return function(*args, **kwargs)
-	raise NotImplementedError('The method ' + method + '() is not implemented so far.')
+	else:
+		raise NotImplementedError('The method ' + method + '() is not implemented so far.')
 
 class Scrape(object):
 	''' Provides a generic scraping interface to all available scrapers for a language. '''
@@ -85,13 +86,12 @@ class Scrape(object):
 			if name in methods:
 				f = lambda *args, **kwargs: self._scrape(name, *args, **kwargs)
 				f.func_name = name
-				f.func_doc = getattr(self._scheduler(name).next(), name).func_doc
+				f.func_doc = getattr(self.iterscrapers(name).next(), name).func_doc
 				return f
 		return super(Scrape, self).__getattribute__(name)
 
-	def _scheduler(self, method, mode = None):
+	def iterscrapers(self, method, mode = None):
 		''' Iterates over all available scrapers. '''
-		# @TODO: Introducte different modes such as random, ...
 
 		global discovered
 		if discovered.has_key(self.language) and discovered[self.language].has_key(method):
@@ -100,7 +100,7 @@ class Scrape(object):
 
 	def _scrape(self, method, *args, **kwargs):
 
-		for Scraper in self._scheduler(method):
+		for Scraper in self.iterscrapers(method):
 			scraper = Scraper(self.word)
 			function = getattr(scraper, method)
 			key = '-'.join([scraper.language, method, scraper.name.lower(), scraper.word.lower()])

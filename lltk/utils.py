@@ -21,7 +21,7 @@ def isempty(result):
 
 def method2pos(method):
 	''' Returns a list of valid POS-tags for a given method. '''
-	
+
 	if method in ('articles', 'plural', 'miniaturize', 'gender'):
 		pos = ['NN']
 	elif method in ('conjugate',):
@@ -31,3 +31,19 @@ def method2pos(method):
 	else:
 		pos = ['*']
 	return pos
+
+def list2tuple(elements):
+	''' '''
+
+	for i in xrange(len(elements)):
+		if isinstance(elements[i], list):
+			elements[i] = list2tuple(elements[i])
+	return tuple(elements)
+
+def tuple2list(elements):
+
+	elements = list(elements)
+	for i in xrange(len(elements)):
+		if isinstance(elements[i], tuple):
+			elements[i] = tuple2list(elements[i])
+	return elements

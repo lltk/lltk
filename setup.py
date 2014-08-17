@@ -27,6 +27,9 @@ setup(
 		"couchdb" : ["CouchDB>=0.10"],
 	},
 	packages = find_packages(),
+	package_data = {
+		"" : ["*.config"],
+	},
 	classifiers = [
 		"Development Status :: 3 - Alpha",
 		"Intended Audience :: Education",
