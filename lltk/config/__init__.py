@@ -8,7 +8,9 @@ class Config(object):
 
 	def __init__(self):
 
+		import lltk, os
 		self.settings = {}
+		self.settings['module-path'] = os.path.dirname(os.path.abspath(lltk.__file__))
 		self.default()
 
 	def __getitem__(self, key):
@@ -27,7 +29,7 @@ class Config(object):
 	def default(self):
 		''' Loads the default configuration. '''
 
-		return self.load('lltk/config/default.config', True)
+		return self.load(self.settings['module-path'] + '/config/default.config')
 
 	def show(self):
 		''' Returns a dictionary containing the current configuration. '''
@@ -41,9 +43,7 @@ class Config(object):
 		if os.path.exists(filename):
 			f = open(filename, 'r')
 			content = f.read()
-			from IPython import embed; embed()
 			content = re.sub('[\t ]*?[#].*?\n', '', content)
-			print content
 			try:
 				settings = json.loads(content)
 			except ValueError:
@@ -56,17 +56,17 @@ class Config(object):
 			else:
 				self.settings.update(settings)
 		else:
-			if not os.path.dirname(filename):
-				return self.load(self.settings['lltk-config-path'] + filename)
+			lltkfilename = self.settings['module-path'] + '/' + self.settings['lltk-config-path'] + filename
+			if os.path.exists(lltkfilename):
+				# This means that filename was provided relative to the lltk module path
+				return self.load(lltkfilename)
 			from lltk.exceptions import ConfigurationError
 			raise ConfigurationError('\'' + filename + '\' seems to be non-existent.')
 
 	def save(self, filename):
 		''' Saves the current configuration to file 'filename' (JSON). '''
 
-		import os, json
-		if not os.path.dirname(filename):
-			return self.save(self.settings['lltk-config-path'] + filename)
+		import json
 		f = open(filename, 'w')
 		json.dump(self.settings, f, indent = 4)
 		f.close()
