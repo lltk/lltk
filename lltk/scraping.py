@@ -103,7 +103,10 @@ class Scrape(object):
 		for Scraper in self.iterscrapers(method):
 			scraper = Scraper(self.word)
 			function = getattr(scraper, method)
-			key = '-'.join([scraper.language, method, scraper.name.lower(), scraper.word.lower()])
+			delimiter = '-'
+			key = delimiter.join(filter(None, [scraper.language, method, scraper.name.lower(), scraper.word.lower(), delimiter.join(args)]))
+			key = key.strip()
+			key = key.replace(' ', delimiter)
 			from datetime import datetime
 			extradata = {'type' : 'lltk-scraping-cache','language' : scraper.language, 'word' : scraper.word, 'method' : method, 'source' : scraper.name, 'url' : scraper.url, 'added' : datetime.now().strftime('%Y-%m-%dT%H:%M:%S')}
 			function = cached(key, extradata)(function)
