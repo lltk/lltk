@@ -58,7 +58,7 @@ class Scrape(object):
 	def __init__(self, language, word):
 
 		global scrapers, discovered
-		if scrapers and not discovered:
+		if scrapers and not discovered.has_key(language):
 			discover(language)
 
 		self.language = language
