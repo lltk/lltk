@@ -7,6 +7,8 @@ import requests
 from lxml import html
 from functools import wraps
 
+import lltk.config as config
+
 from lltk.caching import cached
 from lltk.utils import isempty
 from lltk.helpers import debug
@@ -70,6 +72,8 @@ class Scrape(object):
 			self.methods = []
 		self.mode = 'default'
 		self.source = None
+		self.result = None
+		self.results = []
 
 		for method in self.methods:
 			# Just make sure to make the special methods available for now.
@@ -100,6 +104,8 @@ class Scrape(object):
 
 	def _scrape(self, method, *args, **kwargs):
 
+		results = []
+
 		for Scraper in self.iterscrapers(method):
 			scraper = Scraper(self.word)
 			function = getattr(scraper, method)
@@ -114,8 +120,45 @@ class Scrape(object):
 			if not isempty(result):
 				self.source = scraper
 				debug(scraper.name + ' is answering...')
-				return result
+				results.append(result)
 			debug(scraper.name + ' didn\'t know. Keep looking...')
+
+		# Remove empty or incomplete answers
+		self.results = self.clean(results)
+		self.results = self.merge(self.results)
+		if self.results:
+			if (kwargs.has_key('mode') and kwargs['mode'] == 'all') or config['scraping-results-mode'] == 'all':
+				# Return all results
+				self.result = self.results
+			else:
+				# Return the first result (which is the best guess since the list is sorted by frequency of occurrence)
+				self.result = self.results[0]
+		else:
+			self.result = [None]
+		return self.result
+
+	def merge(self, elements):
+		''' Merges all scraping results to a list sorted by frequency of occurrence. '''
+
+		from collections import Counter
+		from lltk.utils import list2tuple, tuple2list
+		# The list2tuple conversion is necessary because mutable objects (e.g. lists) are not hashable
+		merged = tuple2list([value for value, count in Counter(list2tuple(list(elements))).most_common()])
+		return merged
+
+	def clean(self, elements):
+		''' Removes empty or incomplete answers. '''
+
+		cleanelements = []
+		for i in xrange(len(elements)):
+			if isempty(elements[i]):
+				return []
+			next = elements[i]
+			if isinstance(elements[i], (list, tuple)):
+				next = self.clean(elements[i])
+			if next:
+				cleanelements.append(elements[i])
+		return cleanelements
 
 class GenericScraper(object):
 	''' Generic base class that all custom scrapers should be derived from. '''
