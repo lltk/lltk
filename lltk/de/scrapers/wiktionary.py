@@ -91,6 +91,8 @@ class WiktionaryDe(TextScraper):
 				content = self._normalize(self.tree.xpath(u'//div[@id="mw-content-text"]/p[@title="Trennungsmöglichkeiten am Zeilenumbruch"]')[0].getnext().text_content())
 				result = re.findall('Komparativ[\d|\s]*: ([\w|\s]+)', content, re.U)
 				result = [x.strip() for x in result]
+				# Remove duplicates
+				result = list(set(result))
 				return result
 		return [None]
 
@@ -102,6 +104,8 @@ class WiktionaryDe(TextScraper):
 				content = self._normalize(self.tree.xpath(u'//div[@id="mw-content-text"]/p[@title="Trennungsmöglichkeiten am Zeilenumbruch"]')[0].getnext().text_content())
 				result = re.findall('Superlativ[\d|\s]*: ([\w|\s]+)', content, re.U)
 				result = [x.strip() for x in result]
+				# Remove duplicates
+				result = list(set(result))
 				return result
 		return [None]
 
