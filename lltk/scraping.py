@@ -31,6 +31,7 @@ def register(scraper):
 def discover(language):
 	''' Discovers all registered scrapers to be used for the generic scraping interface. '''
 
+	debug('Discovering scrapers for \'%s\'...' % (language,))
 	global scrapers, discovered
 	for language in scrapers.iterkeys():
 		discovered[language] = {}
@@ -42,6 +43,7 @@ def discover(language):
 					discovered[language][method].append(scraper)
 				else:
 					discovered[language][method] = [scraper]
+	debug('%d scrapers with %d methods (overall) registered for \'%s\'.' % (len(scrapers[language]), len(discovered[language].keys()), language))
 
 def scrape(language, method, word, *args, **kwargs):
 	''' Uses custom scrapers and calls provided method. '''
@@ -117,15 +119,19 @@ class Scrape(object):
 			extradata = {'type' : 'lltk-scraping-cache','language' : scraper.language, 'word' : scraper.word, 'method' : method, 'source' : scraper.name, 'url' : scraper.url, 'added' : datetime.now().strftime('%Y-%m-%dT%H:%M:%S')}
 			function = cached(key, extradata)(function)
 			result = function(*args, **kwargs)
+			debug(u'%s: %s.%s(\'%s\') → %s (\'%s\')' % (scraper.name, scraper.language, method, scraper.word, result, scraper.url))
 			if not isempty(result):
 				self.source = scraper
-				debug(scraper.name + ' is answering...')
 				results.append(result)
-			debug(scraper.name + ' didn\'t know. Keep looking...')
 
 		# Remove empty or incomplete answers
 		self.results = self.clean(results)
 		self.results = self.merge(self.results)
+
+		if config['debug']:
+			for i in xrange(len(self.results)):
+				debug('%d) %s' % (i + 1, self.results[i]))
+
 		if self.results:
 			if (kwargs.has_key('mode') and kwargs['mode'] == 'all') or config['scraping-results-mode'] == 'all':
 				# Return all results
