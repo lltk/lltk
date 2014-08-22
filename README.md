@@ -19,7 +19,7 @@ General information
 
 Everything inside LLTK is split up into different modules, allowing for a maximum of flexibility and interchangeability. In fact, each language is a module for itself. When calling a language-specific function, you can choose between addressing the module directly (e.g. `lltk.nl.plural('hond')`), or using the generic interface (e.g. `lltk.generic.plural('nl', 'hond')`). Both calls will pass down the request to an appropriate scraper and can be considered equivalent.
 
-To get a quick overview of LLTK's syntax, launch [IPython](http://ipython.org/), `import lltk` and start browsing using tab completion. If you want, you can enable the debug mode by setting `lltk.DEBUG = True`. 
+To get a quick overview of LLTK's syntax, launch [IPython](http://ipython.org/), `import lltk` and start browsing using tab completion. If you want, you can enable the debug mode by setting `lltk.config['debug'] = True`.
 
 Examples
 --------
@@ -28,7 +28,7 @@ The syntax should be pretty straightforward and intuitive. Nevertheless, you mig
 
  * **IPA**: `lltk.generic.ipa('de', 'Blume')` returns a list of possible IPA writings or `None`.
  * **Pluralization**: `lltk.generic.plural('nl', 'boom')` returns a list of plural forms or `None`.
- 
+
  Some scrapers know when there's no plural form of a given word. They will return `['']`.
  * **Definite/Indefinite articles**: `lltk.generic.articles('de', 'Katze')` returns a list of lists of valid articles (singular and plural). Have a look at `lltk.generic.reference` as well.
 
