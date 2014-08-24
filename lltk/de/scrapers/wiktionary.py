@@ -23,6 +23,7 @@ class WiktionaryDe(TextScraper):
 		string = string.replace(u'\xb7', '')
 		string = string.replace(u'\xa0', ' ')
 		string = string.replace('selten: ', '')
+		string = string.replace('Alte Rechtschreibung', '')
 		string = string.strip()
 		return string
 
@@ -91,6 +92,8 @@ class WiktionaryDe(TextScraper):
 				content = self._normalize(self.tree.xpath(u'//div[@id="mw-content-text"]/p[@title="Trennungsmöglichkeiten am Zeilenumbruch"]')[0].getnext().text_content())
 				result = re.findall('Komparativ[\d|\s]*: ([\w|\s]+)', content, re.U)
 				result = [x.strip() for x in result]
+				# Remove duplicates
+				result = list(set(result))
 				return result
 		return [None]
 
@@ -102,6 +105,10 @@ class WiktionaryDe(TextScraper):
 				content = self._normalize(self.tree.xpath(u'//div[@id="mw-content-text"]/p[@title="Trennungsmöglichkeiten am Zeilenumbruch"]')[0].getnext().text_content())
 				result = re.findall('Superlativ[\d|\s]*: ([\w|\s]+)', content, re.U)
 				result = [x.strip() for x in result]
+				# Remove duplicates
+				result = list(set(result))
+				# Prepend "am " if necessary
+				result = map(lambda x: 'am ' + x if not x.startswith('am ') else x, result)
 				return result
 		return [None]
 

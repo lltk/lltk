@@ -7,6 +7,8 @@ import requests
 from lxml import html
 from functools import wraps
 
+import lltk.config as config
+
 from lltk.caching import cached
 from lltk.utils import isempty
 from lltk.helpers import debug
@@ -29,6 +31,7 @@ def register(scraper):
 def discover(language):
 	''' Discovers all registered scrapers to be used for the generic scraping interface. '''
 
+	debug('Discovering scrapers for \'%s\'...' % (language,))
 	global scrapers, discovered
 	for language in scrapers.iterkeys():
 		discovered[language] = {}
@@ -40,6 +43,7 @@ def discover(language):
 					discovered[language][method].append(scraper)
 				else:
 					discovered[language][method] = [scraper]
+	debug('%d scrapers with %d methods (overall) registered for \'%s\'.' % (len(scrapers[language]), len(discovered[language].keys()), language))
 
 def scrape(language, method, word, *args, **kwargs):
 	''' Uses custom scrapers and calls provided method. '''
@@ -58,7 +62,7 @@ class Scrape(object):
 	def __init__(self, language, word):
 
 		global scrapers, discovered
-		if scrapers and not discovered:
+		if scrapers and not discovered.has_key(language):
 			discover(language)
 
 		self.language = language
@@ -70,6 +74,8 @@ class Scrape(object):
 			self.methods = []
 		self.mode = 'default'
 		self.source = None
+		self.result = None
+		self.results = []
 
 		for method in self.methods:
 			# Just make sure to make the special methods available for now.
@@ -100,19 +106,65 @@ class Scrape(object):
 
 	def _scrape(self, method, *args, **kwargs):
 
+		results = []
+
 		for Scraper in self.iterscrapers(method):
 			scraper = Scraper(self.word)
 			function = getattr(scraper, method)
-			key = '-'.join([scraper.language, method, scraper.name.lower(), scraper.word.lower()])
+			delimiter = '-'
+			key = delimiter.join(filter(None, [scraper.language, method, scraper.name.lower(), scraper.word.lower(), delimiter.join(args)]))
+			key = key.strip()
+			key = key.replace(' ', delimiter)
 			from datetime import datetime
 			extradata = {'type' : 'lltk-scraping-cache','language' : scraper.language, 'word' : scraper.word, 'method' : method, 'source' : scraper.name, 'url' : scraper.url, 'added' : datetime.now().strftime('%Y-%m-%dT%H:%M:%S')}
 			function = cached(key, extradata)(function)
 			result = function(*args, **kwargs)
+			debug(u'%s: %s.%s(\'%s\') → %s (\'%s\')' % (scraper.name, scraper.language, method, scraper.word, result, scraper.url))
 			if not isempty(result):
 				self.source = scraper
-				debug(scraper.name + ' is answering...')
-				return result
-			debug(scraper.name + ' didn\'t know. Keep looking...')
+				results.append(result)
+
+		# Remove empty or incomplete answers
+		self.results = self.clean(results)
+		self.results = self.merge(self.results)
+
+		if config['debug']:
+			for i in xrange(len(self.results)):
+				debug('%d) %s' % (i + 1, self.results[i]))
+
+		if self.results:
+			if (kwargs.has_key('mode') and kwargs['mode'] == 'all') or config['scraping-results-mode'] == 'all':
+				# Return all results
+				self.result = self.results
+			else:
+				# Return the first result (which is the best guess since the list is sorted by frequency of occurrence)
+				self.result = self.results[0]
+		else:
+			self.result = [None]
+		return self.result
+
+	def merge(self, elements):
+		''' Merges all scraping results to a list sorted by frequency of occurrence. '''
+
+		from collections import Counter
+		from lltk.utils import list2tuple, tuple2list
+		# The list2tuple conversion is necessary because mutable objects (e.g. lists) are not hashable
+		merged = tuple2list([value for value, count in Counter(list2tuple(list(elements))).most_common()])
+		return merged
+
+	def clean(self, elements):
+		''' Removes empty or incomplete answers. '''
+
+		cleanelements = []
+		for i in xrange(len(elements)):
+			if isempty(elements[i]):
+				return []
+			next = elements[i]
+			if isinstance(elements[i], (list, tuple)):
+				next = self.clean(elements[i])
+			if next:
+				cleanelements.append(elements[i])
+		return cleanelements
 
 class GenericScraper(object):
 	''' Generic base class that all custom scrapers should be derived from. '''

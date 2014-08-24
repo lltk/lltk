@@ -30,8 +30,28 @@ def debug(message):
 
 	import lltk.config as config
 	if config['debug']:
-		from termcolor import colored
-		print colored('@LLTK-DEBUG: ' + message, 'yellow')
+
+		try:
+			from termcolor import colored
+		except ImportError:
+			def colored(message, color):
+				return message
+
+		print colored('@LLTK-DEBUG: ' + message, 'green')
+
+def warning(message):
+	''' Prints a message if warning mode is enabled. '''
+
+	import lltk.config as config
+	if config['warnings']:
+
+		try:
+			from termcolor import colored
+		except ImportError:
+			def colored(message, color):
+				return message
+
+		print colored('@LLTK-WARNING: ' + message, 'red')
 
 def open_in_browser(tree, encoding = 'utf-8'):
 	''' Opens a LXML tree in a browser. '''
