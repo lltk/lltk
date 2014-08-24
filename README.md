@@ -1,6 +1,10 @@
 Language Learning Toolkit
 =======
 
+[![Build Status](http://img.shields.io/travis/lltk/lltk/master.svg?style=flat)](https://travis-ci.org/lltk/lltk)
+[![PyPi version](http://img.shields.io/pypi/v/lltk.svg?style=flat)](https://pypi.python.org/pypi/lltk/)
+[![PyPi license](http://img.shields.io/pypi/l/lltk.svg?style=flat)](https://pypi.python.org/pypi/lltk/)
+
 The Language Learning Toolkit combines several approaches such as natural language processing and web scraping to perform a variety of tasks useful for (human) language learning.
 This includes:
 
