@@ -4,6 +4,8 @@
 import pytest
 import os
 
+pytestmark = [pytest.mark.config]
+
 class TestConfig:
 
 	def test_import(self):

@@ -3,6 +3,8 @@
 
 import pytest
 
+pytestmark = [pytest.mark.es, pytest.mark.slow]
+
 class TestConfig:
 
 	def test_import(self):
