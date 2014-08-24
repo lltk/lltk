@@ -3,6 +3,7 @@ Language Learning Toolkit
 
 The Language Learning Toolkit combines several approaches such as natural language processing and web scraping to perform a variety of tasks useful for (human) language learning.
 This includes:
+
  * Part-of-speech tagging (POS) supported by [Pattern](http://github.com/clips/pattern)
  * Phonetic transcriptions in accordance with the [International Phonetic Alphabet](http://en.wikipedia.org/wiki/International_Phonetic_Alphabet) (IPA)
  * Audiosamples ([Forvo](http://www.forvo.com/), Google Translate)
@@ -65,9 +66,11 @@ When using the generic interface, LLTK will raise the `NotImplementedError` exce
 Requirements
 ------------
 
-The Language Learning Toolkit is written for Python 2.7. There is no support for Python 3, yet. Please install the following Python packages: [requests](https://pypi.python.org/pypi/requests/), [lxml](https://pypi.python.org/pypi/lxml/3.3.5), [Pattern](https://pypi.python.org/pypi/Pattern/2.6), [functools32](https://pypi.python.org/pypi/functools32/3.2.3-1).
+The Language Learning Toolkit is written for Python 2.7. There is no support for Python 3, yet. Please install the following Python packages: [requests](https://pypi.python.org/pypi/requests/), [lxml](https://pypi.python.org/pypi/lxml/3.3.5), [Pattern](https://pypi.python.org/pypi/Pattern/2.6), [functools32](https://pypi.python.org/pypi/functools32/3.2.3-1). You can do that by running:
 
-`sudo pip install requests lxml Pattern functools32`
+`sudo pip install -r requirements/base.txt`
+
+Furthermore, we highly encourage you to install `CouchDB` for caching. If you are a developer, you should probably install everything from `base.txt`, `extra.txt` and `development.txt`.
 
 License
 -------
