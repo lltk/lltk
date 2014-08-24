@@ -10,7 +10,7 @@ from setuptools import setup, find_packages
 setup(
 	name = "lltk",
 	description = "The Language Learning Toolkit (LLTK) performs a variety of tasks useful for (human) language learning.",
-	url = "http://github.com/markus-beuckelmann/lltk",
+	url = "http://github.com/lltk/lltk",
 	version = __version__,
 	author = __author__,
 	author_email = __author_email__,
