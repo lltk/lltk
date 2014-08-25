@@ -33,6 +33,16 @@ def disable():
 	global cache
 	cache = NoCache()
 
+def connect(self):
+	''' Establishes the connection to the backend. '''
+
+	return cache.connect()
+
+def status(self):
+	''' Returns True if connection can be established, False otherwise. '''
+
+	return cache.status()
+
 def exists(key):
 	''' Checks if a document is cached. '''
 	return cache.exists(key)
@@ -126,6 +136,15 @@ class GenericCache(object):
 	def connect(self):
 		''' Establishes the connection to the backend. '''
 		pass
+
+	def status(self):
+		''' Returns True if connection can be established, False otherwise. '''
+
+		try:
+			self.connect()
+		except CacheFatalError:
+			return False
+		return True
 
 	def exists(self, key):
 		''' Checks if a document is cached. '''
