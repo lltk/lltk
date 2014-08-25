@@ -5,7 +5,10 @@ __all__ = ['register', 'enable', 'disable', 'get', 'put', 'exists', 'cached', 'C
 
 from functools import wraps
 
-from lltk.helpers import debug
+import lltk.config as config
+
+from lltk.helpers import debug, warning
+from lltk.exceptions import CacheFatalError
 
 caches = {}
 
@@ -22,10 +25,26 @@ def enable(identifier = None, *args, **kwargs):
 
 	global cache
 	if not identifier:
-		if caches:
-			cache = caches[caches.keys()[0]](*args, **kwargs)
+		for item in (config['default-caches'] + ['NoCache']):
+			if caches.has_key(item):
+				debug('Enabling default cache %s...' % (item,))
+				cache = caches[item](*args, **kwargs)
+				if not cache.status():
+					warning('%s could not be loaded. Is the backend running (%s:%d)?' % (item, cache.server, cache.port))
+					continue
+				# This means that the cache backend was set up successfully
+				break
+			else:
+				debug('Cache backend %s is not registered. Are all requirements satisfied?' % (item,))
 	elif caches.has_key(identifier):
+		debug('Enabling cache %s...' % (identifier,))
+		previouscache = cache
 		cache = caches[identifier](*args, **kwargs)
+		if not cache.status():
+			warning('%s could not be loaded. Is the backend running (%s:%d)?' % (identifier, cache.server, cache.port))
+			cache = previouscache
+	else:
+		debug('Cache backend %s is not registered. Are all requirements satisfied?' % (identifier,))
 
 def disable():
 	''' Disables the cache for the current session. '''
@@ -184,3 +203,7 @@ register(NoCache)
 cache = NoCache()
 # Import and register all available caches...
 import lltk.caches
+# Enable default caches...
+enable()
+
+del lltk
