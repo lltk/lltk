@@ -113,7 +113,8 @@ class GenericCache(object):
 			self.filename = kwargs['filename']
 
 	def __del__(self):
-		self.commit()
+		# self.commit()
+		pass
 
 	def __str__(self):
 		return '%s cache backend' % (self.name)
