@@ -117,7 +117,8 @@ class Scrape(object):
 			key = key.replace(' ', delimiter)
 			from datetime import datetime
 			extradata = {'type' : 'lltk-scraping-cache','language' : scraper.language, 'word' : scraper.word, 'method' : method, 'source' : scraper.name, 'url' : scraper.url, 'added' : datetime.now().strftime('%Y-%m-%dT%H:%M:%S')}
-			function = cached(key, extradata)(function)
+			if config['caching']:
+				function = cached(key, extradata)(function)
 			result = function(*args, **kwargs)
 			debug(u'%s: %s.%s(\'%s\') → %s (\'%s\')' % (scraper.name, scraper.language, method, scraper.word, result, scraper.url))
 			if not isempty(result):
