@@ -6,7 +6,7 @@ import json
 
 from lltk.helpers import debug
 
-def google(language, word, n = 20, *args, **kwargs):
+def google(language, word, n = 8, *args, **kwargs):
 	''' Downloads suitable images for a given word from Google Images. '''
 
 	if not kwargs.has_key('start'):
@@ -31,7 +31,7 @@ def google(language, word, n = 20, *args, **kwargs):
 		items = data['responseData']['results']
 		if items:
 			images += [item['url'] for item in items]
-			if len(images) < n:
+			if len(images) < int(n):
 				kwargs['start'] += 8
 				images += google(language, word, n, *args, **kwargs)
-	return images[:n]
+	return images[:int(n)]

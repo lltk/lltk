@@ -10,6 +10,6 @@ from lltk.decorators import language
 ISO639_1 = 'es'
 scrape = language(ISO639_1)(scrape)
 
-def conjugate(word, tense):
+def conjugate(word, tense = 'present'):
 	''' Returns the conjugation of a given verb. '''
 	return scrape('conjugate', word, tense)

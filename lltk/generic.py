@@ -21,7 +21,7 @@ def plural(language, word):
 	pass
 
 @_load_language_or_die
-def conjugate(language, word, tense):
+def conjugate(language, word, tense = 'present'):
 	''' Returns the conjugation of a given verb. '''
 	pass
 
@@ -61,11 +61,21 @@ def reference(language, word):
 	return result
 
 @_load_language
-def translate(language, word):
+def translate(src, dest, word):
 	''' Translates a word using Google Translate. '''
 
-	from textblob import TextBlob
-	return TextBlob(word).translate(from_lang = language[0], to = language[1]).string
+	results = []
+
+	try:
+		from textblob import TextBlob
+		results.append(TextBlob(word).translate(from_lang = src, to = dest).string)
+	except ImportError:
+		pass
+
+	if not results:
+		return [None]
+	return results
+
 
 @_load_language
 def audiosamples(language, word, key = ''):

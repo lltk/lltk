@@ -45,7 +45,7 @@ class Verbix(TextScraper):
 				conjugation.append(text)
 		return conjugation
 
-	def conjugate(self, tense):
+	def conjugate(self, tense = 'present'):
 		''' Tries to conjugate a given verb using verbix.com.'''
 
 		if self.tenses.has_key(tense):
