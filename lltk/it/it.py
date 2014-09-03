@@ -35,7 +35,7 @@ def ipa(word):
 	''' Returns the International Phonetic Alphabet (IPA) writing for a given word. '''
 	return scrape('ipa', word)
 
-def conjugate(word, tense):
+def conjugate(word, tense = 'present'):
 	''' Returns the conjugation of a given verb. '''
 	return scrape('conjugate', word, tense)
 
